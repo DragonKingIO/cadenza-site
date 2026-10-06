@@ -1,0 +1,105 @@
+---
+import '../styles/site.css';
+import Icon from '../components/Icon.astro';
+import { href, localized, REPO, ORIGIN } from '../site';
+import type { Content } from '../i18n/en';
+
+interface Props {
+	t: Content;
+	page: 'home' | 'download' | 'about';
+	title: string;
+	description: string;
+	/** Path of this page without the language prefix: "/", "/download/" or "/about/". */
+	path: string;
+}
+const { t, page, title, description, path } = Astro.props;
+const lang = t.lang;
+const otherLang = lang === 'en' ? 'zh' : 'en';
+const links = [
+	{ key: 'home', label: t.nav.home, to: localized(lang, '/') },
+	{ key: 'docs', label: t.nav.docs, to: localized(lang, '/getting-started/') },
+	{ key: 'download', label: t.nav.download, to: localized(lang, '/download/') },
+	{ key: 'privacy', label: t.nav.privacy, to: localized(lang, '/privacy/') },
+	{ key: 'about', label: t.nav.about, to: localized(lang, '/about/') },
+];
+const og = `${ORIGIN}${href(lang === 'zh' ? '/og-zh.png' : '/og-en.png')}`;
+const artVars = `--art-left:url(${href('/art/hang-left.svg')});--art-right:url(${href('/art/hang-right.svg')})`;
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="color-scheme" content="light dark" />
+		<link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+		<link rel="alternate" hreflang="en" href={`${ORIGIN}${localized('en', path)}`} />
+		<link rel="alternate" hreflang="zh-CN" href={`${ORIGIN}${localized('zh', path)}`} />
+		<link rel="canonical" href={`${ORIGIN}${localized(lang, path)}`} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={og} />
+		<meta name="twitter:card" content="summary_large_image" />
+	</head>
+	<body class:list={['site', t.lang === 'zh' ? 'zhpage' : 'enpage']} style={artVars}>
+		<header class="bar" id="bar">
+			<div class="wrap bar-in">
+				<a class="brand" href={localized(lang, '/')} aria-label={t.name}>
+					<img src={href('/favicon.svg')} alt="" width="28" height="28" />
+					<b>{t.name}</b>
+				</a>
+				<button class="menu-btn" type="button" aria-expanded="false" aria-controls="links" id="menu-btn">{t.nav.menu}</button>
+				<nav class="links" id="links" aria-label="Main">
+					{links.map((l) => <a href={l.to} aria-current={l.key === page ? 'page' : undefined}>{l.label}</a>)}
+				</nav>
+				<div class="tools">
+					<a class="lang" href={localized(otherLang, path)} hreflang={otherLang === 'zh' ? 'zh-CN' : 'en'} lang={otherLang === 'zh' ? 'zh-CN' : 'en'}>{t.nav.otherLabel}</a>
+					<a class="gh" href={REPO} rel="noopener" aria-label="GitHub"><Icon name="code" /></a>
+				</div>
+			</div>
+		</header>
+		<main id="content"><slot /></main>
+		<footer class="foot">
+			<div class="wrap">
+				<div class="cols">
+					<div>
+						<a class="brand" href={localized(lang, '/')}><img src={href('/favicon.svg')} alt="" width="26" height="26" /><b>{t.name}</b></a>
+						<p class="tagline">{t.footer.tagline}</p>
+						<p class="tagline">{t.footer.meta}</p>
+					</div>
+					<div>
+						<h4>{t.footer.siteTitle}</h4>
+						<ul>
+							{links.map((l) => <li><a href={l.to}>{l.label}</a></li>)}
+							<li><a href={localized(lang, '/changelog/')}>{t.footer.links.changelog}</a></li>
+						</ul>
+					</div>
+					<div>
+						<h4>{t.footer.communityTitle}</h4>
+						<ul>
+							<li><a href={REPO} rel="noopener">GitHub</a></li>
+							<li><a href={`${REPO}/issues`} rel="noopener">{t.footer.links.issues}</a></li>
+							<li><a href={localized(lang, '/contribute/')}>{t.footer.links.contributing}</a></li>
+							<li><a href={localized(lang, '/contribute/security/')}>{t.footer.links.security}</a></li>
+							<li><a href={localized(lang, '/developers/third-party-notices/')}>{t.footer.links.notices}</a></li>
+						</ul>
+					</div>
+				</div>
+				<p class="legal">{t.footer.legal}</p>
+			</div>
+		</footer>
+		<script is:inline>
+			(function () {
+				var nav = document.getElementById('bar'), btn = document.getElementById('menu-btn');
+				if (!nav || !btn) return;
+				btn.addEventListener('click', function () {
+					var open = nav.classList.toggle('open');
+					btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+				});
+			})();
+		</script>
+	</body>
+</html>

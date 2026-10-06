@@ -40,6 +40,8 @@ const pages = [
 	{ src: 'cadenza/docs/ACCURACY.md', slug: 'developers/accuracy', label: 'Accuracy benchmark' },
 	{ src: 'cadenza/docs/LOCAL-MODELS.md', slug: 'developers/local-models', label: 'Local models (developer notes)' },
 	{ src: 'cadenza/docs/PLATFORMS.md', slug: 'developers/platforms', label: 'Platforms' },
+	{ src: 'cadenza/THIRD_PARTY_NOTICES.md', slug: 'developers/third-party-notices', label: 'Third-party notices' },
+	{ src: 'cadenza/THIRD_PARTY_NOTICES.zh-CN.md', slug: 'developers/third-party-notices', label: '第三方声明', zh: true },
 	{ src: 'cadenza/PRIVACY.md', slug: 'privacy/notice', label: 'Privacy notice' },
 	{ src: 'cadenza/PRIVACY.zh-CN.md', slug: 'privacy/notice', label: '隐私说明', zh: true },
 	{ src: 'cadenza/TERMS.md', slug: 'privacy/terms', label: 'Terms of use' },

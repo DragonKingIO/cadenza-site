@@ -40,7 +40,6 @@ export default defineConfig({
 					translations: { 'zh-CN': '开始' },
 					items: [
 						{ slug: 'getting-started', label: 'Getting started', translations: { 'zh-CN': '快速开始' } },
-						{ slug: 'download', label: 'Download', translations: { 'zh-CN': '下载' } },
 					],
 				},
 				{
@@ -71,6 +70,7 @@ export default defineConfig({
 						{ slug: 'developers/accuracy', label: 'Accuracy benchmark', translations: { 'zh-CN': '准确度基准' } },
 						{ slug: 'developers/local-models', label: 'Local models', translations: { 'zh-CN': '本地模型（开发说明）' } },
 						{ slug: 'developers/platforms', label: 'Platforms', translations: { 'zh-CN': '平台说明' } },
+						{ slug: 'developers/third-party-notices', label: 'Third-party notices', translations: { 'zh-CN': '第三方声明' } },
 					],
 				},
 				{

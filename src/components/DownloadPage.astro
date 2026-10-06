@@ -1,0 +1,81 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Icon from './Icon.astro';
+import Seal from './Seal.astro';
+import { localized, REPO } from '../site';
+import { latestRelease } from '../lib/release';
+import type { Content } from '../i18n/en';
+
+interface Props { t: Content }
+const { t } = Astro.props;
+const d = t.download;
+const release = await latestRelease();
+const mb = release?.zip ? (release.zip.size / 1048576).toFixed(1) : null;
+const step1 = release ? d.step1Release : d.step1Source;
+---
+
+<SiteLayout t={t} page="download" title={t.meta.downloadTitle} description={t.meta.downloadDesc} path="/download/">
+	<div class="wrap dl">
+		<div class="verblock">
+			<p class="eyebrow">{d.eyebrow}</p>
+			<h1 class="page">{d.title}</h1>
+			<p class="small" style="font-size:16px;margin:0 0 6px">{d.lede}</p>
+			{release ? (
+				<>
+					<div class="ver">{release.version}</div>
+					<p class="meta">{d.released} {release.published}{mb ? ` · ${mb} ${d.sizeUnit}` : ''}</p>
+					<div class="actions">
+						<a class="btn primary" href={release.zip ? release.zip.url : release.pageUrl} rel="noopener"><Icon name="download" />{d.getBtn}</a>
+					</div>
+					<div class="links2">
+						<a href={release.pageUrl} rel="noopener">{d.notesLink}</a>
+						{release.checksumsUrl && <a href={release.checksumsUrl} rel="noopener">{d.checksumLink}</a>}
+					</div>
+				</>
+			) : (
+				<>
+					<div class="ver soon">{d.soon}</div>
+					<p style="margin:0 0 16px"><span class="stamp">{d.stamp}</span></p>
+					<p class="meta">{d.noRelease}</p>
+					<div class="actions">
+						<a class="btn primary" href="#source"><Icon name="code" />{d.buildBtn}</a>
+						<a class="btn line" href={`${REPO}/releases`} rel="noopener"><Icon name="bell" />{d.watchBtn}</a>
+					</div>
+				</>
+			)}
+		</div>
+
+		<div>
+			<h2 class="title" style="font-size:clamp(24px,3vw,34px)">{d.stepsTitle}</h2>
+			<ol class="install" style="margin-top:20px">
+				<li><div><h3>{step1.title}</h3><p>{step1.text}</p></div></li>
+				<li><div><h3>{d.step2.title}</h3><p>{d.step2.text}</p></div></li>
+				<li><div><h3>{d.step3.title}</h3><p>{d.step3.text}</p></div></li>
+			</ol>
+
+			{release && release.notes.length > 0 && (
+				<>
+					<h3 style="margin:34px 0 0;font-size:18px">{d.whatsNew}</h3>
+					<ul class="notes">{release.notes.map((n) => <li>{n}</li>)}</ul>
+				</>
+			)}
+
+			<h3 style="margin:38px 0 0;font-size:18px">{d.reqsTitle}</h3>
+			<dl class="reqs">
+				{d.reqs.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}
+			</dl>
+
+			<details class="src" id="source" open={!release}>
+				<summary>{d.sourceSummary}</summary>
+				<p class="small" style="margin:0 0 12px">{d.sourceText}</p>
+				<pre class="code"><code>{d.sourceCode}</code></pre>
+				<p class="small" style="margin:0 0 16px">{d.sourceAfter} <a href={localized(t.lang, '/getting-started/')}>{d.docsLink}</a></p>
+			</details>
+
+			<div class="updates">
+				<span class="ico"><Icon name="bell" /></span>
+				<div><h3>{d.updatesTitle}</h3><p>{d.updatesText}</p></div>
+			</div>
+		</div>
+	</div>
+</SiteLayout>

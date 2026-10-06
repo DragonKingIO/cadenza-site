@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The download page shows the latest GitHub release, read at build time, so rebuild daily to keep it current.
+  schedule:
+    - cron: '17 3 * * *'
 
 permissions:
   contents: read

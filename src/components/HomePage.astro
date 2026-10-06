@@ -1,0 +1,90 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Icon from './Icon.astro';
+import Seal from './Seal.astro';
+import EditorMock from './EditorMock.astro';
+import { href, localized } from '../site';
+import type { Content } from '../i18n/en';
+// import VideoEmbed from './VideoEmbed.astro';   // intro video slot, see README "Adding the intro video"
+
+interface Props { t: Content }
+const { t } = Astro.props;
+const h = t.home;
+const f = h.features;
+---
+
+<SiteLayout t={t} page="home" title={t.meta.homeTitle} description={t.meta.homeDesc} path="/">
+	<section class="hero wrap">
+		<p class="eyebrow">{h.eyebrow}</p>
+		<h1 class="huge">{h.titleA}{t.lang === 'zh' ? '' : ' '}<b>{h.titleB}</b></h1>
+		<p class="lede">{h.lede}</p>
+		<div class="actions" style="justify-content:center">
+			<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
+			<a class="btn line" href={localized(t.lang, '/getting-started/')}>{h.docs}<Icon name="arrow" /></a>
+		</div>
+		<p class="small" style="margin:18px auto 0;max-width:36em">{h.early}</p>
+		<div class="stage">
+			<img class="enso" src={href('/art/enso.svg')} alt="" width="460" height="460" />
+			<EditorMock title={h.mockTitle} line={h.mockLine} sentence={h.mockSentence} keyLabel={h.mockKey} steps={h.mockSteps} />
+		</div>
+		{/* Intro video slot: <VideoEmbed title="…" poster="/video/intro-poster.jpg" src="/video/intro.mp4" /> */}
+	</section>
+
+	<section class="s wrap">
+		<div class="center">
+			<h2 class="title">{h.flowTitle}</h2>
+			<p class="lede" style="margin-bottom:0">{h.flowSub}</p>
+		</div>
+		<div class="flow">
+			<svg class="wave" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+				<path d="M0 38 C 120 2, 240 74, 400 38 S 640 4, 800 40 S 1060 76, 1200 36" fill="none" stroke="var(--primary)" stroke-opacity="0.38" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round" />
+			</svg>
+			<ol>
+				{h.steps.map((s, i) => (
+					<li>
+						<span class="node">{i + 1}</span>
+						<h3>{s.title}</h3>
+						<p>{s.text}</p>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<section class="s wrap">
+		<div class="center">
+			<h2 class="title">{h.bentoTitle}</h2>
+			<p class="lede" style="margin-bottom:0">{h.bentoSub}</p>
+		</div>
+		<div class="bento">
+			<div class="cell a">
+				<span class="glyph"><Icon name={f.a.icon} /></span>
+				<h3>{f.a.title}</h3>
+				<p>{f.a.text}</p>
+				<span class="big"><Icon name={f.a.icon} /></span>
+			</div>
+			<div class="cell b"><span class="glyph"><Icon name={f.b.icon} /></span><h3>{f.b.title}</h3><p>{f.b.text}</p></div>
+			<div class="cell c"><span class="glyph"><Icon name={f.c.icon} /></span><h3>{f.c.title}</h3><p>{f.c.text}</p></div>
+			<div class="cell d"><span class="glyph"><Icon name={f.d.icon} /></span><h3>{f.d.title}</h3><p>{f.d.text}</p></div>
+			<div class="cell e"><span class="glyph"><Icon name={f.e.icon} /></span><h3>{f.e.title}</h3><p>{f.e.text}</p></div>
+		</div>
+	</section>
+
+	<section class="s narrow">
+		<h2 class="title">{h.noTitle}</h2>
+		<p class="lede" style="margin:0">{h.noSub}</p>
+		<ul class="no-list">
+			{h.nots.map(([what, detail]) => <li><b>{what}</b><span>{detail}</span></li>)}
+		</ul>
+	</section>
+
+	<section class="closing wrap">
+		<Seal large />
+		<h2 class="title">{h.closingTitle}</h2>
+		<p class="lede">{h.closingText}</p>
+		<div class="actions" style="justify-content:center">
+			<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
+			<a class="btn line" href={localized(t.lang, '/about/')}>{t.nav.about}<Icon name="arrow" /></a>
+		</div>
+	</section>
+</SiteLayout>

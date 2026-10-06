@@ -1,0 +1,17 @@
+---
+// An honest little animation of the product: hold the key, the capsule shows, release, the text appears at the cursor.
+interface Props { title: string; line: string; sentence: string; keyLabel: string; steps: number }
+const { title, line, sentence, keyLabel, steps } = Astro.props;
+---
+
+<div class="editor" aria-hidden="true">
+	<div class="tb"><i></i><i></i><i></i><em>{title}</em></div>
+	<div class="body">
+		<p>{line}</p>
+		<div class="typed"><span style={`animation-timing-function: steps(${steps}, end)`}>{sentence}</span></div>
+	</div>
+</div>
+<div class="dock" aria-hidden="true">
+	<span class="capsule"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+	<span class="keycap">{keyLabel}</span>
+</div>

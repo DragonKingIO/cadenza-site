@@ -26,7 +26,7 @@ export const zh: Content = {
 		mockLine: '明天',
 		mockSentence: '下午三点开会，把文件发给李明。',
 		mockSteps: 15,
-		mockKey: '按住 ⌥ Option',
+		mockKey: '按住 ⌥ Option（默认）',
 		flowTitle: '按一下键，四步',
 		flowSub: '都在你的 Mac 上，除非你选了云端服务。',
 		steps: [

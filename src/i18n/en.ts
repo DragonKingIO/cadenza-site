@@ -24,7 +24,7 @@ export const en = {
 		mockLine: 'Tomorrow',
 		mockSentence: 'Meet at three, and send Li Ming the file.',
 		mockSteps: 41,
-		mockKey: 'Hold ⌥ Option',
+		mockKey: 'Hold ⌥ Option (default)',
 		flowTitle: 'One key press, four steps',
 		flowSub: 'All on your Mac, unless you choose a cloud service.',
 		steps: [

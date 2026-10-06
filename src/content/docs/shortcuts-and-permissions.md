@@ -16,6 +16,18 @@ On the **Shortcut** page you can:
 A single modifier key, such as Left Option, works as a hold shortcut as long as you press it on its own. If you press another
 key together with it, the recording is cancelled, so normal Option shortcuts keep working.
 
+## Which key should I use?
+
+Left Option is only the default. It is not a macOS standard: macOS's own dictation is started, by default, by pressing the Globe
+(Fn) key twice. Cadenza uses a single modifier key because those are reliable to detect. Fn itself is not supported.
+
+Pick a key you do not press by itself during normal typing:
+
+- **Left Option** is also used for special characters and shortcuts. Cadenza cancels a recording when you press another key
+  together with it, but the recording has already started for a moment.
+- **Right Option** or **Right Command** are rarely pressed alone, so they get in the way less. Many push-to-talk tools use them.
+- On the Shortcut page you can also record any other key or combination.
+
 ## Permissions
 
 | Permission | Why Cadenza needs it |

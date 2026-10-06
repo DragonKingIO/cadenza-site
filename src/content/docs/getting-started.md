@@ -37,7 +37,7 @@ Settings → Privacy shows the state of each one. If the shortcut page says a pe
 ## 4. Dictate
 
 1. Click into any text field.
-2. **Hold Left Option**, speak, then release.
+2. **Hold your shortcut** (Left Option by default), speak, then release.
 3. The text is typed at the cursor. If it cannot be typed, the app keeps it so you can copy it.
 
 Press **Esc** to cancel a recording. You can change the shortcut, or use "tap to start, tap to stop", on the Shortcut page.

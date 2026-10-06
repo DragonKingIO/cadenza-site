@@ -2,33 +2,33 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from './Icon.astro';
 import { href, localized, REPO } from '../site';
+import { latestRelease } from '../lib/release';
 import type { Content } from '../i18n/en';
 
 interface Props { t: Content }
 const { t } = Astro.props;
 const h = t.home;
 const linkTo = (target: string) => (target === 'repo' ? REPO : localized(t.lang, target));
+const release = await latestRelease();
 ---
 
 <SiteLayout t={t} page="home" title={t.meta.homeTitle} description={t.meta.homeDesc} path="/">
-	<section class="ink">
-		<div class="wrap hero">
-			<a class="pill" href={REPO} rel="noopener"><b>{h.badgeTag}</b>{h.badge}<Icon name="arrow" /></a>
-			<h1 class="display">{h.titleA}{t.lang === 'zh' ? '' : ' '}<b>{h.titleB}</b></h1>
+	<section class="wrap hero">
+		<div class="hero-text">
+			<a class="status" href={localized(t.lang, '/download/')}>
+				<span class="dot"></span>{release ? `v${release.version} · ${h.released} ${release.published}` : h.status}
+			</a>
+			<h1 class="display">{h.titleA}<br /><b>{h.titleB}</b></h1>
 			<p class="lede">{h.lede}</p>
 			<div class="actions">
-				<a class="btn jade" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
-				<a class="btn ghost" href={REPO} rel="noopener"><Icon name="code" />{h.github}</a>
+				<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
+				<a class="btn line" href={REPO} rel="noopener"><Icon name="code" />{h.github}</a>
 			</div>
-			<p class="note">{h.early}</p>
+			<p class="meta">{h.meta.map((m, i) => <>{i > 0 && <span class="sep">/</span>}{m}</>)}</p>
 		</div>
-	</section>
-
-	{/* The video sits on the seam between the ink band and the paper below. Self-hosted, no third-party player. It plays
-	    muted and looping once the page is visible; with reduced motion or save data, or without JavaScript, the poster and
-	    native controls stay and nothing is downloaded until play. */}
-	<section class="showcase">
-		<figure class="wrap intro">
+		{/* Self-hosted, no third-party player. It plays muted and looping once the page is visible; with reduced motion or
+		    save data, or without JavaScript, the poster and native controls stay and nothing is downloaded until play. */}
+		<figure class="intro">
 			<video controls muted loop playsinline preload="none" poster={href('/video/intro-poster.jpg')} aria-label={h.videoLabel} width="1920" height="1080">
 				<source src={href(h.video)} type="video/mp4" />
 			</video>
@@ -71,7 +71,7 @@ const linkTo = (target: string) => (target === 'repo' ? REPO : localized(t.lang,
 		<p class="after">{h.enginesNote} <a href={localized(t.lang, '/privacy/')}>{h.privacyLink}<Icon name="arrow" /></a></p>
 	</section>
 
-	<section class="jadeband">
+	<section class="band">
 		<div class="wrap os">
 			<div>
 				<p class="kicker">{h.openKicker}</p>

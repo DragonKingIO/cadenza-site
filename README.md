@@ -53,9 +53,10 @@ every version stays in Git history forever. A longer video belongs on YouTube or
 ## Design
 
 The home, download and about pages are custom Astro pages (`src/pages`, `src/components`, `src/layouts`); the documentation is
-Starlight. The look is "ink, paper, jade": deep ink-green bands (top bar, page heads, footer), paper-white reading areas, jade
-accents, bold system sans display type, no web fonts and no images other than the logo and the intro video. The home page runs
-ink → video on the seam → paper (features, local or cloud) → a jade open-source band → ink footer. All copy for the three pages
+Starlight. The look is light and plain, for people who read code: paper-white pages, ink-green text, jade only as an accent, thin
+rules instead of shadows, monospace for small facts, dark code blocks; no web fonts and no images besides the logo and the intro
+video. The home page has the headline and the video side by side, a ruled grid of four features, local models versus your own
+cloud account, and an open-source band with the build commands. All copy for the three pages
 lives in `src/i18n/en.ts` and `src/i18n/zh.ts` (same shape, keep them in step); styles are in `src/styles/site.css`.
 
 The download page shows the latest GitHub release, read once at build time (`src/lib/release.ts`), so visitors' browsers make no

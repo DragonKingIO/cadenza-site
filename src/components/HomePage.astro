@@ -1,62 +1,95 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from './Icon.astro';
-import Seal from './Seal.astro';
-import { href, localized } from '../site';
+import { href, localized, REPO } from '../site';
 import type { Content } from '../i18n/en';
 
 interface Props { t: Content }
 const { t } = Astro.props;
 const h = t.home;
+const linkTo = (target: string) => (target === 'repo' ? REPO : localized(t.lang, target));
 ---
 
 <SiteLayout t={t} page="home" title={t.meta.homeTitle} description={t.meta.homeDesc} path="/">
-	<section class="hero wrap">
-		<p class="eyebrow">{h.eyebrow}</p>
-		<h1 class="huge">{h.titleA}{t.lang === 'zh' ? '' : ' '}<b>{h.titleB}</b></h1>
-		<p class="lede">{h.lede}</p>
-		<div class="actions" style="justify-content:center">
-			<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
-			<a class="btn line" href={localized(t.lang, '/getting-started/')}>{h.docs}<Icon name="arrow" /></a>
-		</div>
-		<p class="small" style="margin:18px auto 0;max-width:36em">{h.early}</p>
-		<div class="stage">
-			<img class="enso" src={href('/art/enso.svg')} alt="" width="460" height="460" />
-			{/* Self-hosted, no third-party player. Plays muted and looping; nothing loads for visitors who prefer reduced
-			    motion or save data, and without JavaScript the native controls stay. */}
-			<figure class="intro">
-				<video controls muted loop playsinline preload="none" poster={href('/video/intro-poster.jpg')} aria-label={h.videoLabel} width="1920" height="1080">
-					<source src={href(h.video)} type="video/mp4" />
-				</video>
-				<button class="sound" type="button" aria-pressed="false" hidden>
-					<span class="off"><Icon name="volume" />{h.soundOn}</span>
-					<span class="on"><Icon name="mute" />{h.soundOff}</span>
-				</button>
-			</figure>
+	<section class="ink">
+		<div class="wrap hero">
+			<a class="pill" href={REPO} rel="noopener"><b>{h.badgeTag}</b>{h.badge}<Icon name="arrow" /></a>
+			<h1 class="display">{h.titleA}{t.lang === 'zh' ? '' : ' '}<b>{h.titleB}</b></h1>
+			<p class="lede">{h.lede}</p>
+			<div class="actions">
+				<a class="btn jade" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
+				<a class="btn ghost" href={REPO} rel="noopener"><Icon name="code" />{h.github}</a>
+			</div>
+			<p class="note">{h.early}</p>
 		</div>
 	</section>
 
+	{/* The video sits on the seam between the ink band and the paper below. Self-hosted, no third-party player. It plays
+	    muted and looping once the page is visible; with reduced motion or save data, or without JavaScript, the poster and
+	    native controls stay and nothing is downloaded until play. */}
+	<section class="showcase">
+		<figure class="wrap intro">
+			<video controls muted loop playsinline preload="none" poster={href('/video/intro-poster.jpg')} aria-label={h.videoLabel} width="1920" height="1080">
+				<source src={href(h.video)} type="video/mp4" />
+			</video>
+			<button class="sound" type="button" aria-pressed="false" hidden>
+				<span class="off"><Icon name="volume" />{h.soundOn}</span>
+				<span class="on"><Icon name="mute" />{h.soundOff}</span>
+			</button>
+		</figure>
+	</section>
+
 	<section class="s wrap">
-		<h2 class="title center">{h.featuresTitle}</h2>
-		<div class="features">
+		<p class="kicker">{h.featuresKicker}</p>
+		<h2 class="h2">{h.featuresTitle}</h2>
+		<div class="feats">
 			{h.features.map((f) => (
-				<div class="feature">
+				<div class="feat">
 					<span class="glyph"><Icon name={f.icon} /></span>
 					<h3>{f.title}{f.tag && <span class="tag">{f.tag}</span>}</h3>
 					<p>{f.text}</p>
-					{f.link && <a class="more" href={localized(t.lang, f.link.path)}>{f.link.text}<Icon name="arrow" /></a>}
 				</div>
 			))}
 		</div>
 	</section>
 
-	<section class="closing wrap">
-		<Seal large />
-		<h2 class="title">{h.closingTitle}</h2>
-		<p class="lede">{h.closingText}</p>
-		<div class="actions" style="justify-content:center">
-			<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
-			<a class="btn line" href={localized(t.lang, '/about/')}>{t.nav.about}<Icon name="arrow" /></a>
+	<section class="s wrap">
+		<p class="kicker">{h.enginesKicker}</p>
+		<h2 class="h2">{h.enginesTitle}</h2>
+		<div class="engines">
+			<div class="panel local">
+				<h3><Icon name="lock" />{h.localTitle}</h3>
+				<ul class="chips">{h.localItems.map((x) => <li>{x}</li>)}</ul>
+				<p>{h.localNote}</p>
+			</div>
+			<div class="panel">
+				<h3><Icon name="cloud" />{h.cloudTitle}</h3>
+				<ul class="chips">{h.cloudItems.map((x) => <li>{x}</li>)}</ul>
+				<p>{h.cloudNote}</p>
+			</div>
+		</div>
+		<p class="after">{h.enginesNote} <a href={localized(t.lang, '/privacy/')}>{h.privacyLink}<Icon name="arrow" /></a></p>
+	</section>
+
+	<section class="jadeband">
+		<div class="wrap os">
+			<div>
+				<p class="kicker">{h.openKicker}</p>
+				<h2 class="h2">{h.openTitle}</h2>
+				<p class="sub">{h.openText}</p>
+				<div class="oslinks">
+					{h.openLinks.map((l) => (
+						<a class="oslink" href={linkTo(l.href)} rel={l.href === 'repo' ? 'noopener' : undefined}>
+							<b><Icon name={l.icon} />{l.title}</b>
+							<span>{l.text}</span>
+						</a>
+					))}
+				</div>
+			</div>
+			<div class="term" role="group" aria-label={h.buildLabel}>
+				<div class="tb"><i></i><i></i><i></i><em>{h.buildLabel}</em></div>
+				<pre><code>{h.buildCode.split('\n').map((line) => <span class="ln"><span class="prompt">$</span>{line}</span>)}</code></pre>
+			</div>
 		</div>
 	</section>
 </SiteLayout>

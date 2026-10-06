@@ -1,7 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from './Icon.astro';
-import Seal from './Seal.astro';
 import { localized, REPO } from '../site';
 import { latestRelease } from '../lib/release';
 import type { Content } from '../i18n/en';
@@ -15,11 +14,15 @@ const step1 = release ? d.step1Release : d.step1Source;
 ---
 
 <SiteLayout t={t} page="download" title={t.meta.downloadTitle} description={t.meta.downloadDesc} path="/download/">
+	<section class="ink">
+		<div class="wrap pagehead">
+			<p class="kicker">{d.eyebrow}</p>
+			<h1 class="page">{d.title}</h1>
+			<p class="lede">{d.lede}</p>
+		</div>
+	</section>
 	<div class="wrap dl">
 		<div class="verblock">
-			<p class="eyebrow">{d.eyebrow}</p>
-			<h1 class="page">{d.title}</h1>
-			<p class="small" style="font-size:16px;margin:0 0 6px">{d.lede}</p>
 			{release ? (
 				<>
 					<div class="ver">{release.version}</div>
@@ -46,7 +49,7 @@ const step1 = release ? d.step1Release : d.step1Source;
 		</div>
 
 		<div>
-			<h2 class="title" style="font-size:clamp(24px,3vw,34px)">{d.stepsTitle}</h2>
+			<h2 class="h3">{d.stepsTitle}</h2>
 			<ol class="install" style="margin-top:20px">
 				<li><div><h3>{step1.title}</h3><p>{step1.text}</p></div></li>
 				<li><div><h3>{d.step2.title}</h3><p>{d.step2.text}</p></div></li>
@@ -55,12 +58,12 @@ const step1 = release ? d.step1Release : d.step1Source;
 
 			{release && release.notes.length > 0 && (
 				<>
-					<h3 style="margin:34px 0 0;font-size:18px">{d.whatsNew}</h3>
+					<h3 class="minor">{d.whatsNew}</h3>
 					<ul class="notes">{release.notes.map((n) => <li>{n}</li>)}</ul>
 				</>
 			)}
 
-			<h3 style="margin:38px 0 0;font-size:18px">{d.reqsTitle}</h3>
+			<h3 class="minor">{d.reqsTitle}</h3>
 			<dl class="reqs">
 				{d.reqs.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}
 			</dl>

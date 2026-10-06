@@ -1,0 +1,11 @@
+---
+// The brand mark drawn inline so it can follow the background: a jade bubble with the cursor cut out in ink on the dark
+// bands, the original colours on paper.
+import logo from '../assets/logo.svg?raw';
+interface Props { size?: number; tone?: 'ink' | 'paper' }
+const { size = 28, tone = 'ink' } = Astro.props;
+const inner = logo.replace(/<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').replace(/<title[^>]*>.*?<\/title>/, '');
+const marks = tone === 'ink' ? inner.replace('#185C53', 'var(--jade)').replace('#F5F1E8', 'var(--ink)') : inner;
+---
+
+<svg class="logo" viewBox="0 0 1024 1024" width={size} height={size} aria-hidden="true" set:html={marks} />

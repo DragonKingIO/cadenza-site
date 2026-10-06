@@ -1,6 +1,7 @@
 ---
 import '../styles/site.css';
 import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
 import { href, localized, REPO, ORIGIN } from '../site';
 import type { Content } from '../i18n/en';
 
@@ -16,14 +17,12 @@ const { t, page, title, description, path } = Astro.props;
 const lang = t.lang;
 const otherLang = lang === 'en' ? 'zh' : 'en';
 const links = [
-	{ key: 'home', label: t.nav.home, to: localized(lang, '/') },
 	{ key: 'docs', label: t.nav.docs, to: localized(lang, '/getting-started/') },
 	{ key: 'download', label: t.nav.download, to: localized(lang, '/download/') },
 	{ key: 'privacy', label: t.nav.privacy, to: localized(lang, '/privacy/') },
 	{ key: 'about', label: t.nav.about, to: localized(lang, '/about/') },
 ];
 const og = `${ORIGIN}${href(lang === 'zh' ? '/og-zh.png' : '/og-en.png')}`;
-const artVars = `--art-left:url(${href('/art/hang-left.svg')});--art-right:url(${href('/art/hang-right.svg')})`;
 ---
 
 <!doctype html>
@@ -44,11 +43,11 @@ const artVars = `--art-left:url(${href('/art/hang-left.svg')});--art-right:url($
 		<meta property="og:image" content={og} />
 		<meta name="twitter:card" content="summary_large_image" />
 	</head>
-	<body class:list={['site', t.lang === 'zh' ? 'zhpage' : 'enpage']} style={artVars}>
+	<body class:list={['site', t.lang === 'zh' ? 'zhpage' : 'enpage']}>
 		<header class="bar" id="bar">
 			<div class="wrap bar-in">
 				<a class="brand" href={localized(lang, '/')} aria-label={t.name}>
-					<img src={href('/favicon.svg')} alt="" width="28" height="28" />
+					<Logo size={28} />
 					<b>{t.name}</b>
 				</a>
 				<button class="menu-btn" type="button" aria-expanded="false" aria-controls="links" id="menu-btn">{t.nav.menu}</button>
@@ -57,22 +56,23 @@ const artVars = `--art-left:url(${href('/art/hang-left.svg')});--art-right:url($
 				</nav>
 				<div class="tools">
 					<a class="lang" href={localized(otherLang, path)} hreflang={otherLang === 'zh' ? 'zh-CN' : 'en'} lang={otherLang === 'zh' ? 'zh-CN' : 'en'}>{t.nav.otherLabel}</a>
-					<a class="gh" href={REPO} rel="noopener" aria-label="GitHub"><Icon name="code" /></a>
+					<a class="btn ghost sm" href={REPO} rel="noopener"><Icon name="code" />GitHub</a>
 				</div>
 			</div>
 		</header>
-		<main id="content"><slot /></main>
+		<main id="content" class:list={[page]}><slot /></main>
 		<footer class="foot">
 			<div class="wrap">
 				<div class="cols">
 					<div>
-						<a class="brand" href={localized(lang, '/')}><img src={href('/favicon.svg')} alt="" width="26" height="26" /><b>{t.name}</b></a>
+						<a class="brand" href={localized(lang, '/')}><Logo size={26} /><b>{t.name}</b></a>
 						<p class="tagline">{t.footer.tagline}</p>
 						<p class="tagline">{t.footer.meta}</p>
 					</div>
 					<div>
 						<h4>{t.footer.siteTitle}</h4>
 						<ul>
+							<li><a href={localized(lang, '/')}>{t.nav.home}</a></li>
 							{links.map((l) => <li><a href={l.to}>{l.label}</a></li>)}
 							<li><a href={localized(lang, '/changelog/')}>{t.footer.links.changelog}</a></li>
 						</ul>

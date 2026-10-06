@@ -10,11 +10,13 @@ const toc = [a.name, a.idea, a.how, a.principles, a.platforms, a.license];
 ---
 
 <SiteLayout t={t} page="about" title={t.meta.aboutTitle} description={t.meta.aboutDesc} path="/about/">
-	<div class="wrap" style="padding-top:64px">
-		<p class="eyebrow">{a.eyebrow}</p>
-		<h1 class="page" style="max-width:15em">{a.title}</h1>
-		<p class="lede" style="margin-inline:0">{a.lede}</p>
-	</div>
+	<section class="ink">
+		<div class="wrap pagehead">
+			<p class="kicker">{a.eyebrow}</p>
+			<h1 class="page">{a.title}</h1>
+			<p class="lede">{a.lede}</p>
+		</div>
+	</section>
 
 	<div class="wrap essay">
 		<aside class="toc" aria-label={a.tocTitle}>
@@ -25,7 +27,7 @@ const toc = [a.name, a.idea, a.how, a.principles, a.platforms, a.license];
 		<div>
 			<section id={a.name.id}>
 				<h2>{a.name.title}</h2>
-				<blockquote><p class="q" style="color:var(--ink);max-width:none">{a.name.quote}</p></blockquote>
+				<blockquote><p class="q">{a.name.quote}</p></blockquote>
 				{a.name.paras.map((p) => <p>{p}</p>)}
 			</section>
 
@@ -65,7 +67,7 @@ const toc = [a.name, a.idea, a.how, a.principles, a.platforms, a.license];
 			<section id={a.license.id}>
 				<h2>{a.license.title}</h2>
 				<p>{a.license.text} <a href={REPO} rel="noopener">{a.license.source}</a></p>
-				<h3 style="margin:26px 0 0;font-size:17px">{a.license.creditsTitle}</h3>
+				<h3 class="minor">{a.license.creditsTitle}</h3>
 				<table class="tbl">
 					<tbody>{a.license.credits.map(([name, what]) => <tr><td>{name}</td><td>{what}</td></tr>)}</tbody>
 				</table>

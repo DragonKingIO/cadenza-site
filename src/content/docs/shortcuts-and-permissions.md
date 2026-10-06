@@ -13,7 +13,7 @@ On the **Shortcut** page you can:
 - switch to **tap to start, tap to stop**, with its own shortcut;
 - turn the shortcut off. You can still record from the menu bar item.
 
-A single modifier key, such as Left Option, works as a hold shortcut as long as you press it on its own. If you press another
+A single modifier key, either Left Option or Right Option, works as a hold shortcut as long as you press it on its own. If you press another
 key together with it, the recording is cancelled, so normal Option shortcuts keep working.
 
 ## Which key should I use?
@@ -21,12 +21,13 @@ key together with it, the recording is cancelled, so normal Option shortcuts kee
 Left Option is only the default. It is not a macOS standard: macOS's own dictation is started, by default, by pressing the Globe
 (Fn) key twice. Cadenza uses a single modifier key because those are reliable to detect.
 
-Today **Left Option is the only single key Cadenza supports** as a hold shortcut, and Fn itself is not supported. Left Option is
-also used for special characters and shortcuts. Cadenza cancels a recording when you press another key together with it, but the
-recording has already started for a moment.
+Today **Left Option and Right Option are the only single keys Cadenza supports** as a shortcut, and Fn itself is not supported.
+Command, Shift and Control are left out on purpose: they are pressed all the time as part of other shortcuts, so holding one
+alone would start recordings by accident. Option is also used for special characters and shortcuts. Cadenza cancels a recording
+when you press another key together with it, but the recording has already started for a moment.
 
-If Left Option gets in your way, record a different shortcut on the Shortcut page: a key together with at least two modifiers
-(including Control or Command), or a function key. Other single keys, such as Right Option, are not supported yet.
+If Option gets in your way, record a different shortcut on the Shortcut page: a key together with at least two modifiers
+(including Control or Command), or a function key.
 
 ## Permissions
 

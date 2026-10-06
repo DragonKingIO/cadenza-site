@@ -2,15 +2,12 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from './Icon.astro';
 import Seal from './Seal.astro';
-import EditorMock from './EditorMock.astro';
 import { href, localized } from '../site';
 import type { Content } from '../i18n/en';
-// import VideoEmbed from './VideoEmbed.astro';   // intro video slot, see README "Adding the intro video"
 
 interface Props { t: Content }
 const { t } = Astro.props;
 const h = t.home;
-const f = h.features;
 ---
 
 <SiteLayout t={t} page="home" title={t.meta.homeTitle} description={t.meta.homeDesc} path="/">
@@ -25,57 +22,32 @@ const f = h.features;
 		<p class="small" style="margin:18px auto 0;max-width:36em">{h.early}</p>
 		<div class="stage">
 			<img class="enso" src={href('/art/enso.svg')} alt="" width="460" height="460" />
-			<EditorMock title={h.mockTitle} line={h.mockLine} sentence={h.mockSentence} keyLabel={h.mockKey} steps={h.mockSteps} />
-		</div>
-		{/* Intro video slot: <VideoEmbed title="…" poster="/video/intro-poster.jpg" src="/video/intro.mp4" /> */}
-	</section>
-
-	<section class="s wrap">
-		<div class="center">
-			<h2 class="title">{h.flowTitle}</h2>
-			<p class="lede" style="margin-bottom:0">{h.flowSub}</p>
-		</div>
-		<div class="flow">
-			<svg class="wave" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
-				<path d="M0 38 C 120 2, 240 74, 400 38 S 640 4, 800 40 S 1060 76, 1200 36" fill="none" stroke="var(--primary)" stroke-opacity="0.38" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round" />
-			</svg>
-			<ol>
-				{h.steps.map((s, i) => (
-					<li>
-						<span class="node">{i + 1}</span>
-						<h3>{s.title}</h3>
-						<p>{s.text}</p>
-					</li>
-				))}
-			</ol>
+			{/* Self-hosted, no third-party player. Plays muted and looping; nothing loads for visitors who prefer reduced
+			    motion or save data, and without JavaScript the native controls stay. */}
+			<figure class="intro">
+				<video controls muted loop playsinline preload="none" poster={href('/video/intro-poster.jpg')} aria-label={h.videoLabel} width="1920" height="1080">
+					<source src={href(h.video)} type="video/mp4" />
+				</video>
+				<button class="sound" type="button" aria-pressed="false" hidden>
+					<span class="off"><Icon name="volume" />{h.soundOn}</span>
+					<span class="on"><Icon name="mute" />{h.soundOff}</span>
+				</button>
+			</figure>
 		</div>
 	</section>
 
 	<section class="s wrap">
-		<div class="center">
-			<h2 class="title">{h.bentoTitle}</h2>
-			<p class="lede" style="margin-bottom:0">{h.bentoSub}</p>
+		<h2 class="title center">{h.featuresTitle}</h2>
+		<div class="features">
+			{h.features.map((f) => (
+				<div class="feature">
+					<span class="glyph"><Icon name={f.icon} /></span>
+					<h3>{f.title}{f.tag && <span class="tag">{f.tag}</span>}</h3>
+					<p>{f.text}</p>
+					{f.link && <a class="more" href={localized(t.lang, f.link.path)}>{f.link.text}<Icon name="arrow" /></a>}
+				</div>
+			))}
 		</div>
-		<div class="bento">
-			<div class="cell a">
-				<span class="glyph"><Icon name={f.a.icon} /></span>
-				<h3>{f.a.title}</h3>
-				<p>{f.a.text}</p>
-				<span class="big"><Icon name={f.a.icon} /></span>
-			</div>
-			<div class="cell b"><span class="glyph"><Icon name={f.b.icon} /></span><h3>{f.b.title}</h3><p>{f.b.text}</p></div>
-			<div class="cell c"><span class="glyph"><Icon name={f.c.icon} /></span><h3>{f.c.title}</h3><p>{f.c.text}</p></div>
-			<div class="cell d"><span class="glyph"><Icon name={f.d.icon} /></span><h3>{f.d.title}</h3><p>{f.d.text}</p></div>
-			<div class="cell e"><span class="glyph"><Icon name={f.e.icon} /></span><h3>{f.e.title}</h3><p>{f.e.text}</p></div>
-		</div>
-	</section>
-
-	<section class="s narrow">
-		<h2 class="title">{h.noTitle}</h2>
-		<p class="lede" style="margin:0">{h.noSub}</p>
-		<ul class="no-list">
-			{h.nots.map(([what, detail]) => <li><b>{what}</b><span>{detail}</span></li>)}
-		</ul>
 	</section>
 
 	<section class="closing wrap">
@@ -88,3 +60,21 @@ const f = h.features;
 		</div>
 	</section>
 </SiteLayout>
+
+<script>
+	const video = document.querySelector<HTMLVideoElement>('.intro video');
+	const sound = document.querySelector<HTMLButtonElement>('.intro .sound');
+	const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (navigator as any).connection?.saveData === true;
+	if (video && sound && !calm) {
+		// Browsers refuse to start a video in a hidden tab, so wait until the page is visible. If playing is refused anyway,
+		// the native controls stay.
+		const start = () => video.play().then(() => { video.controls = false; sound.hidden = false; }).catch(() => {});
+		if (document.hidden) document.addEventListener('visibilitychange', start, { once: true });
+		else start();
+		sound.addEventListener('click', () => {
+			video.muted = !video.muted;
+			if (!video.muted && video.paused) video.play();
+			sound.setAttribute('aria-pressed', String(!video.muted));
+		});
+	}
+</script>

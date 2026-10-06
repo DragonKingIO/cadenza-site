@@ -1,0 +1,24 @@
+/* Cadenza brand colors: primary #185C53, paper #FAF8F3, ink #172C29 (from the brand theme). */
+:root {
+	--sl-color-accent-low: #d6e3dd;
+	--sl-color-accent: #185c53;
+	--sl-color-accent-high: #0f3f38;
+}
+:root[data-theme='light'] {
+	--sl-color-bg: #faf8f3;
+	--sl-color-bg-nav: #faf8f3;
+	--sl-color-bg-sidebar: #f4f1e9;
+	--sl-color-text: #172c29;
+	--sl-color-text-accent: #185c53;
+	--sl-color-black: #faf8f3;
+	--sl-color-white: #172c29;   /* Starlight's light theme uses "white" for headings, so it must be the dark ink color */
+	--sl-color-hairline: #d6e3dd;
+}
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #123f39;
+	--sl-color-accent: #3fa597;
+	--sl-color-accent-high: #a9ddd3;
+	--sl-color-text-accent: #6fc4b6;
+}
+.hero img { max-width: 160px; }
+.site-title img { height: 1.6rem; width: auto; }

@@ -1,0 +1,47 @@
+---
+title: Cadenza
+description: Local-first voice input for macOS. Hold a shortcut, speak, and the text is typed at your cursor.
+template: splash
+hero:
+  tagline: Speak where you type. Open-source voice input for macOS that runs on your Mac.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get started
+      link: getting-started/
+      icon: right-arrow
+    - text: Download
+      link: download/
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/DragonKingIO/Cadenza-voice
+      variant: minimal
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+:::caution[Early development]
+Cadenza works day to day on the maintainer's Mac but has not been tested on many setups, and there is no release yet: for now you build it from source. Bug reports are very welcome.
+:::
+
+<CardGrid stagger>
+	<Card title="Private by design" icon="laptop">
+		No account, no server, no analytics. With local recognition your audio never leaves the Mac. Cloud services receive audio only after your explicit consent for that provider, and a "never go online" switch hides everything that could connect.
+	</Card>
+	<Card title="Local models you can compare" icon="magnifier">
+		SenseVoice, FireRedASR2 and Parakeet run on your Mac. "Compare models with my voice" shows which one suits you; your recordings stay in memory.
+	</Card>
+	<Card title="Your cloud service, optionally" icon="random">
+		Bring your own account for iFLYTEK, Volcengine, Tencent Cloud, Alibaba Cloud, Baidu or Deepgram. If the network fails, a local model can take over.
+	</Card>
+	<Card title="Works with your hardware" icon="setting">
+		An optional, off-by-default interface on 127.0.0.1 lets your own pendant, glasses or button send audio and receive text.
+	</Card>
+	<Card title="Open and measured" icon="open-book">
+		Every change to recognition is justified by a repeatable benchmark. Read how it works, or help improve it.
+	</Card>
+	<Card title="Made together" icon="heart">
+		MIT licensed, with a contributing guide, a code of conduct and a private way to report security problems.
+	</Card>
+</CardGrid>

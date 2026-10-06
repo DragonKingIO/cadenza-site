@@ -15,11 +15,8 @@ export const zh: Content = {
 		aboutDesc: '随言为什么存在、怎么工作，以及它承诺什么。',
 	},
 	home: {
-		status: '早期预览',
-		released: '发布于',
-		titleA: '随口说，',
-		titleB: '随处写。',
-		lede: '开源的 macOS 语音输入。按住一个键说话，文字就出现在光标处。识别在你自己的 Mac 上完成，不在别人的服务器上。',
+		subtitle: '开源的 macOS 语音输入',
+		lede: '按住一个键说话，文字就出现在光标处。识别在本地完成，不经过别人的服务器。',
 		download: '下载 macOS 版',
 		github: 'GitHub',
 		meta: ['MIT 许可证', 'macOS 26+', 'Apple 芯片'],
@@ -37,7 +34,7 @@ export const zh: Content = {
 		],
 		enginesKicker: '隐私',
 		enginesTitle: '本地优先，云端只在你要时才用。',
-		localTitle: '在你的 Mac 上',
+		localTitle: '本地',
 		localNote: '不上传任何内容。',
 		localItems: ['SenseVoice', 'FireRedASR2', 'Parakeet'],
 		cloudTitle: '你自己的云端账号',
@@ -47,7 +44,7 @@ export const zh: Content = {
 		privacyLink: '阅读隐私承诺',
 		openKicker: '开源',
 		openTitle: '读代码，自己构建，一起改进。',
-		openText: '随言基于 MIT 许可证，在公开中开发。什么会离开你的 Mac，代码里写得清清楚楚，谁都可以查。',
+		openText: '随言基于 MIT 许可证，在公开中开发。什么会离开本机，代码里写得清清楚楚，谁都可以查。',
 		buildLabel: '从源码构建',
 		buildCode: `git clone https://github.com/DragonKingIO/Cadenza-voice.git
 cd Cadenza-voice
@@ -114,19 +111,19 @@ cd Cadenza-voice
 		idea: {
 			id: 'idea', toc: '想法', title: '打字才是慢的那一步',
 			paras: [
-				'你说话，文字出现在光标处。所有工作都在你的 Mac 上完成，凡是要离开这台 Mac 的东西，都需要你明确同意。',
+				'你说话，文字出现在光标处。所有工作都在本地完成，凡是要离开本机的东西，都需要你明确同意。',
 				'聊天、写笔记、发邮件、搜索、写代码注释：一天里有很多这样的小时刻，打字会拖慢你。',
 			],
 		},
 		how: {
 			id: 'how', toc: '怎么工作', title: '你说话时发生了什么',
-			paras: ['四步，都在你的 Mac 上。云端是你可以选择的选项，不是必须。'],
+			paras: ['四步，都在本地完成。云端是你可以选择的选项，不是必须。'],
 			steps: [['按住快捷键', '默认左 Option。'], ['采集', '音频只在内存里，不保存。'], ['识别', '本地模型，或你选的服务商。'], ['写入', '写到光标处，或保留下来供你复制。']],
 		},
 		principles: {
 			id: 'principles', toc: '原则', title: '三条原则',
 			items: [
-				['本地优先，云端需同意', '除非你打开，否则任何内容都不会离开这台 Mac。云端服务只有在你对该服务商同意后才会收到音频，隐私文字也会说明取消能撤回什么、不能撤回什么。'],
+				['本地优先，云端需同意', '除非你打开，否则任何内容都不会离开本机。云端服务只有在你对该服务商同意后才会收到音频，隐私文字也会说明取消能撤回什么、不能撤回什么。'],
 				['坦白说明局限', '我们区分哪些是在真实 Mac 上测过的，哪些只用假的环境测过，并公开准确度的测量方法。不声称兼容每一个应用。'],
 				['一起来做', 'MIT 许可证，有贡献指南、行为准则和私下报告安全问题的渠道。每个改动都有人评审，并遵守隐私约定。'],
 			],
@@ -142,7 +139,7 @@ cd Cadenza-voice
 			text: '随言免费，基于 MIT 许可证开源。',
 			source: '在 GitHub 查看源码',
 			creditsTitle: '站在别人的工作之上',
-			credits: [['sherpa-onnx', '在你的 Mac 上运行语音模型。'], ['SenseVoice、FireRedASR2、Parakeet TDT', '你可以下载的语音模型。'], ['Apple Speech', 'Mac 自带的语音识别。']],
+			credits: [['sherpa-onnx', '在本地运行语音模型。'], ['SenseVoice、FireRedASR2、Parakeet TDT', '你可以下载的语音模型。'], ['Apple Speech', 'Mac 自带的语音识别。']],
 			creditsLink: '第三方声明与许可证',
 		},
 	},

@@ -13,11 +13,8 @@ export const en = {
 		aboutDesc: 'Why Cadenza exists, how it works, and what it promises.',
 	},
 	home: {
-		status: 'Early preview',
-		released: 'released',
-		titleA: 'Speak where',
-		titleB: 'you type.',
-		lede: 'Open-source voice input for macOS. Hold a key, speak, and the text appears at your cursor. Recognition runs on your Mac, not on someone else\'s server.',
+		subtitle: 'Open-source voice input for macOS',
+		lede: 'Hold a key, speak, and the text appears at your cursor. Recognition runs locally, not on someone else\'s server.',
 		download: 'Download for macOS',
 		github: 'GitHub',
 		meta: ['MIT license', 'macOS 26+', 'Apple silicon'],
@@ -35,7 +32,7 @@ export const en = {
 		],
 		enginesKicker: 'Privacy',
 		enginesTitle: 'Local first. Cloud only if you ask.',
-		localTitle: 'On your Mac',
+		localTitle: 'Local',
 		localNote: 'Nothing is uploaded.',
 		localItems: ['SenseVoice', 'FireRedASR2', 'Parakeet'],
 		cloudTitle: 'Your own cloud account',
@@ -112,13 +109,13 @@ cd Cadenza-voice
 		idea: {
 			id: 'idea', toc: 'The idea', title: 'Typing is the slow part',
 			paras: [
-				'You talk, and the words appear at your cursor. All the work happens on your Mac, and anything that would leave it needs your explicit yes.',
+				'You talk, and the words appear at your cursor. All the work happens locally, and anything that would leave your computer needs your explicit yes.',
 				'It is for chat, notes, email, search, code comments: the many small moments a day when typing slows you down.',
 			],
 		},
 		how: {
 			id: 'how', toc: 'How it works', title: 'What happens when you speak',
-			paras: ['Four steps, on your Mac. The cloud is an option you choose, not a requirement.'],
+			paras: ['Four steps, all local. The cloud is an option you choose, not a requirement.'],
 			steps: [['Hold the shortcut', 'Left Option by default.'], ['Capture', 'Audio stays in memory and is never saved.'], ['Recognize', 'A local model, or the provider you chose.'], ['Write', 'At the cursor, or kept for you to copy.']],
 		},
 		principles: {
@@ -140,7 +137,7 @@ cd Cadenza-voice
 			text: 'Cadenza is free and open source under the MIT license.',
 			source: 'Source on GitHub',
 			creditsTitle: 'Built on the work of others',
-			credits: [['sherpa-onnx', 'Runs the speech models on your Mac.'], ['SenseVoice, FireRedASR2, Parakeet TDT', 'The speech models you can download.'], ['Apple Speech', 'The Mac\'s built-in recognition.']],
+			credits: [['sherpa-onnx', 'Runs the speech models locally.'], ['SenseVoice, FireRedASR2, Parakeet TDT', 'The speech models you can download.'], ['Apple Speech', 'The Mac\'s built-in recognition.']],
 			creditsLink: 'Third-party notices and licenses',
 		},
 	},

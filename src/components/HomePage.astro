@@ -15,16 +15,14 @@ const release = await latestRelease();
 <SiteLayout t={t} page="home" title={t.meta.homeTitle} description={t.meta.homeDesc} path="/">
 	<section class="wrap hero">
 		<div class="hero-text">
-			<a class="status" href={localized(t.lang, '/download/')}>
-				<span class="dot"></span>{release ? `v${release.version} · ${h.released} ${release.published}` : h.status}
-			</a>
-			<h1 class="display">{h.titleA}<br /><b>{h.titleB}</b></h1>
+			<h1 class="display">{t.name}</h1>
+			<p class="subtitle">{h.subtitle}</p>
 			<p class="lede">{h.lede}</p>
 			<div class="actions">
 				<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
 				<a class="btn line" href={REPO} rel="noopener"><Icon name="code" />{h.github}</a>
 			</div>
-			<p class="meta">{h.meta.map((m, i) => <>{i > 0 && <span class="sep">/</span>}{m}</>)}</p>
+			<p class="meta">{[...(release ? [`v${release.version}`] : []), ...h.meta].map((m, i) => <>{i > 0 && <span class="sep">/</span>}{m}</>)}</p>
 		</div>
 		{/* Self-hosted, no third-party player. It plays muted and looping once the page is visible; with reduced motion or
 		    save data, or without JavaScript, the poster and native controls stay and nothing is downloaded until play. */}

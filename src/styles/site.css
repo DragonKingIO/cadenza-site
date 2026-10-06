@@ -105,11 +105,8 @@ section.s { padding-top: 104px; }
 /* Home: hero, text left and the video right */
 .hero { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: 56px; align-items: center; padding: 72px 0 8px; }
 @media (max-width: 960px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-top: 48px; } }
-.status { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); text-decoration: none; }
-.status:hover { color: var(--text); }
-.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--tint); }
-h1.display { margin: 0 0 18px; font-size: clamp(40px, 5.2vw, 62px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; }
-h1.display b { color: var(--primary); font-weight: inherit; }
+h1.display { margin: 0 0 10px; font-size: clamp(44px, 5.6vw, 68px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; }
+.hero .subtitle { margin: 0 0 16px; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; color: var(--primary); }
 .zhpage h1.display { letter-spacing: 0.01em; line-height: 1.2; }
 .hero .lede { margin: 0 0 28px; max-width: 30em; font-size: 17.5px; color: var(--muted); }
 .hero .meta { margin: 22px 0 0; font-family: var(--mono); font-size: 12.5px; color: var(--faint); }

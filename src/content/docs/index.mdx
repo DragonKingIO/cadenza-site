@@ -20,6 +20,10 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import local from '../../assets/screens/settings-local-en.png';
+import tuning from '../../assets/screens/settings-tuning-en.png';
+// import VideoEmbed from '../../components/VideoEmbed.astro';
 
 :::caution[Early development]
 Cadenza works day to day on the maintainer's Mac but has not been tested on many setups, and there is no release yet: for now you build it from source. Bug reports are very welcome.
@@ -45,3 +49,18 @@ Cadenza works day to day on the maintainer's Mac but has not been tested on many
 		MIT licensed, with a contributing guide, a code of conduct and a private way to report security problems.
 	</Card>
 </CardGrid>
+
+{/* Intro video: when it exists, uncomment the import above and use one of these (see the README, "Adding the intro video"):
+<VideoEmbed title="Cadenza in 90 seconds" poster="/video/intro-poster.jpg" src="/video/intro.mp4" />
+<VideoEmbed title="Cadenza in 90 seconds" poster="/video/intro-poster.jpg" href="https://www.youtube.com/watch?v=..." />
+*/}
+
+## See it
+
+This is the real settings window. **Choose where recognition happens:** local models run on your Mac and nothing is uploaded.
+
+<Image src={local} alt="Settings, Local models tab: SenseVoice (recommended), FireRedASR2 and Parakeet" widths={[640, 1100]} sizes="(max-width: 800px) 100vw, 640px" />
+
+**Tune it:** language, number formatting, voice-detection sensitivity and CPU use, all processed on this Mac.
+
+<Image src={tuning} alt="Settings, Recognition settings tab" widths={[640, 1100]} sizes="(max-width: 800px) 100vw, 640px" />

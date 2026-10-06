@@ -37,6 +37,13 @@ The documents are read from a git ref of that repository (default `HEAD`), never
 cannot leak into the site. The script adds the page title, rewrites relative links (to another synced page, or to the file on GitHub) and records the
 source commit in `SYNCED_FROM.txt`. Commit the result. To change the text, edit it in the application repository.
 
+## Adding the intro video
+
+Slots are ready on the home page (a commented `VideoEmbed` block at the bottom of `src/content/docs/index.mdx` and of the
+`zh-cn` version). Hosting advice, in short: put a short MP4 (about 90 seconds or less, under 20 MB) in `public/video/` and play
+it with `src`; link the full-length YouTube or Bilibili version with `href`, as a poster, not an embedded player. Never commit large
+videos to Git. The reasoning is in `cadenza/docs/MEDIA.md` of the application repository.
+
 ## Naming
 
 The English site says **Cadenza** and the Chinese site says **随言**, never both in one language (see `BRAND.md` in the

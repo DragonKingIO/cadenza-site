@@ -20,6 +20,10 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import local from '../../../assets/screens/settings-local-zh.png';
+import tuning from '../../../assets/screens/settings-tuning-zh.png';
+// import VideoEmbed from '../../../components/VideoEmbed.astro';
 
 :::caution[早期开发]
 随言在维护者的 Mac 上日常使用没有问题，但还没在很多环境里测试过，目前也没有发布版本，需要自己从源码构建。非常欢迎反馈问题。
@@ -45,3 +49,18 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		MIT 许可证，有贡献指南、行为准则，以及私下报告安全问题的渠道。
 	</Card>
 </CardGrid>
+
+{/* 介绍视频：有了之后，取消上面 import 的注释，并使用下面其中一种（见 README“添加介绍视频”）：
+<VideoEmbed title="90 秒了解随言" poster="/video/intro-poster.jpg" src="/video/intro.mp4" />
+<VideoEmbed title="90 秒了解随言" poster="/video/intro-poster.jpg" href="https://www.bilibili.com/video/..." />
+*/}
+
+## 看看界面
+
+这是真实的设置窗口。**选择在哪里识别**：本地模型在你的 Mac 上运行，不上传任何内容。
+
+<Image src={local} alt="设置，本地模型标签：SenseVoice（推荐）、FireRedASR2、Parakeet" widths={[640, 1100]} sizes="(max-width: 800px) 100vw, 640px" />
+
+**细调**：语言、数字规整、人声检测灵敏度和 CPU 使用方式，全部在这台 Mac 上处理。
+
+<Image src={tuning} alt="设置，识别设置标签" widths={[640, 1100]} sizes="(max-width: 800px) 100vw, 640px" />

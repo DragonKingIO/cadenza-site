@@ -1,0 +1,55 @@
+---
+// Intro video slot. It adds no third-party script and loads nothing until the visitor acts:
+//  - `src`  : a short MP4 in public/video/ (for example "/video/intro.mp4"), played with a native <video preload="none">.
+//  - `href` : the full-length video on YouTube or Bilibili. Shown as a poster that links out, never as an embedded player,
+//             because an embedded player would load that platform's scripts and cookies.
+interface Props {
+	poster: string;
+	title: string;
+	src?: string;
+	href?: string;
+}
+const { poster, title, src, href } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (path: string) => (/^https?:/.test(path) ? path : `${base}${path}`);
+---
+
+{
+	src ? (
+		<video class="intro-video" controls preload="none" poster={url(poster)} aria-label={title}>
+			<source src={url(src)} type="video/mp4" />
+			<a href={url(src)}>{title}</a>
+		</video>
+	) : href ? (
+		<a class="intro-video-poster" href={href} rel="noopener">
+			<img src={url(poster)} alt={title} loading="lazy" />
+			<span aria-hidden="true">▶</span>
+		</a>
+	) : null
+}
+
+<style>
+	.intro-video,
+	.intro-video-poster img {
+		width: 100%;
+		max-width: 48rem;
+		border-radius: 0.75rem;
+		display: block;
+		margin-inline: auto;
+	}
+	.intro-video-poster {
+		position: relative;
+		display: block;
+		max-width: 48rem;
+		margin-inline: auto;
+	}
+	.intro-video-poster span {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-size: 3rem;
+		color: white;
+		text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+	}
+</style>

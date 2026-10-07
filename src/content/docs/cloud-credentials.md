@@ -1,11 +1,39 @@
 ---
-title: Cloud API keys — where to click
+title: Cloud speech — registration and setup
 description: Enable cloud speech services, find your credentials and fill in the matching fields.
 ---
+
+This guide is for **speech-to-text (ASR)**. For screenshots and images, use the separate [cloud OCR setup guide](../ocr-cloud-credentials/). Service activation, permissions and upload consent are separate.
+
+## Account and region guide
+
+**Start with Deepgram if you want an English-language cloud setup.** Local recognition needs no cloud account. Cadenza currently supports Deepgram plus five China-based speech integrations; OpenAI and ElevenLabs are not yet available in the app.
+
+| Provider | Registration or sign-in | Integration scope |
+| --- | --- | --- |
+| Deepgram | [International signup](https://console.deepgram.com/signup) | English console; follow the steps below |
+| Tencent Cloud | [International site](https://www.tencentcloud.com/) · [China site](https://cloud.tencent.com/) | Walkthrough uses the China console; international accounts have not been validated in Cadenza |
+| Alibaba Cloud | [International site](https://www.alibabacloud.com/) · [China site](https://www.aliyun.com/) | Walkthrough uses mainland NLS; international account and region compatibility require validation |
+| Volcengine | [China console](https://console.volcengine.com/) | Doubao Speech; BytePlus credentials are not interchangeable |
+| Baidu | [Account portal](https://login.bce.baidu.com/) | China speech service; console may be Chinese |
+| iFLYTEK | [Open platform](https://www.xfyun.cn/) | China speech dictation service; console may be Chinese |
+
+Changing the UI language does not change your primary engine, account region or upload destination. International and China accounts must not be assumed to share credentials or service activation. The translated screenshots below are references for the China consoles, not international-console walkthroughs.
 
 Open **Settings → Speech → Cloud services → Configure**. Local models do not require a cloud account or API key.
 
 The screenshots were provided by Lulu on **7 October 2026**, with account details and credentials obscured. They show Chinese consoles; labels may change. Check the provider's pricing before activating a service.
+
+## Deepgram setup
+
+<a id="deepgram"></a>
+
+1. [Create a Deepgram account](https://console.deepgram.com/signup), then open the [console](https://console.deepgram.com/).
+2. Select your project, open **Settings → API Keys → Create a New API Key**, and grant permission to call speech recognition.
+3. Copy the secret when it is displayed and paste it into Cadenza’s **API Key** field. Keep it private; the console does not show the secret again.
+4. Choose the recognition language in Cadenza, review upload consent, then test the connection. These steps have no account screenshots yet.
+
+[Official Deepgram key creation guide](https://developers.deepgram.com/docs/create-additional-api-keys)
 
 ## Volcengine setup
 
@@ -67,14 +95,6 @@ Open [Baidu AI Cloud](https://cloud.baidu.com/), [sign in](https://login.bce.bai
 Field reference, without step-by-step screenshots: open the [iFLYTEK console](https://console.xfyun.cn/), select an application with speech dictation enabled, and find its service credentials. Fill **App ID**, **API Key** and **API Secret** into the three matching fields. API Secret and API Key are different values.
 
 [Official iFLYTEK authentication guide](https://www.xfyun.cn/doc/asr/voicedictation/API.html)
-
-## Deepgram setup
-
-<a id="deepgram"></a>
-
-Field reference, without step-by-step screenshots: open the [Deepgram console](https://console.deepgram.com/), create a key under your project's **API Keys** with permission to call speech recognition, and paste it into Cadenza's **API Key** field.
-
-[Official Deepgram key creation guide](https://developers.deepgram.com/docs/create-additional-api-keys)
 
 ## After filling in the fields
 

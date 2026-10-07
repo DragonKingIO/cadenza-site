@@ -1,4 +1,5 @@
 ---
+import { newWindowLinksScript } from '../lib/link-policy.js';
 import '../styles/site.css';
 import Icon from '../components/Icon.astro';
 import Logo from '../components/Logo.astro';
@@ -101,5 +102,6 @@ const og = `${ORIGIN}${href(lang === 'zh' ? '/og-zh.png' : '/og-en.png')}`;
 				});
 			})();
 		</script>
+	<script is:inline set:html={newWindowLinksScript} />
 	</body>
 </html>

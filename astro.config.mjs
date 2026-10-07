@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { newWindowLinksScript } from './src/lib/link-policy.js';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
 
@@ -27,6 +28,7 @@ export default defineConfig({
 			customCss: ['./src/styles/theme.css'],
 			plugins: [starlightLinksValidator({ errorOnRelativeLinks: false })],
 			head: [
+				{ tag: 'script', content: newWindowLinksScript },
 				// First visit from outside the site on a Chinese browser: show the Chinese home page. Choosing English later is respected.
 				{
 					tag: 'script',
@@ -47,7 +49,8 @@ export default defineConfig({
 					translations: { 'zh-CN': '使用指南' },
 					items: [
 						{ slug: 'engines', label: 'Recognition engines', translations: { 'zh-CN': '识别引擎' } },
-						{ slug: 'cloud-credentials', label: 'Cloud API keys', translations: { 'zh-CN': '云端 API 密钥教程' } },
+						{ slug: 'cloud-credentials', label: 'Cloud speech setup', translations: { 'zh-CN': '云端语音识别配置' } },
+						{ slug: 'ocr-cloud-credentials', label: 'Cloud OCR setup', translations: { 'zh-CN': '云端 OCR 识别配置' } },
 						{ slug: 'compare-models', label: 'Compare models with your voice', translations: { 'zh-CN': '用我的声音比较模型' } },
 						{ slug: 'shortcuts-and-permissions', label: 'Shortcuts and permissions', translations: { 'zh-CN': '快捷键与权限' } },
 						{ slug: 'troubleshooting', label: 'Troubleshooting', translations: { 'zh-CN': '常见问题' } },

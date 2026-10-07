@@ -22,3 +22,27 @@
 }
 .hero img { max-width: 160px; }
 .site-title img { height: 1.6rem; width: auto; }
+
+/* Keep the reading column and its outline together instead of splitting wide-screen
+   surplus into a large leading gutter and an oversized outline column. */
+:root {
+	--sl-content-width: 64rem;
+	--cadenza-toc-width: 16rem;
+}
+:root:lang(en) { --sl-content-width: 56rem; }
+@media (min-width: 72rem) {
+	[data-has-sidebar][data-has-toc] .main-pane {
+		flex: 0 1 auto;
+		min-width: 0;
+		width: min(
+			calc(100% - var(--cadenza-toc-width)),
+			calc(var(--sl-content-width) + 2 * var(--sl-content-pad-x))
+		);
+		--sl-content-margin-inline: 0;
+	}
+	[data-has-sidebar] .right-sidebar-container {
+		flex: 0 0 var(--cadenza-toc-width);
+		width: var(--cadenza-toc-width);
+	}
+	[data-has-sidebar] .right-sidebar { width: var(--cadenza-toc-width); }
+}

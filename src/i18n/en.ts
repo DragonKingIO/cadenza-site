@@ -79,7 +79,7 @@ cd Cadenza-voice
 			['Chip', 'Apple silicon'],
 			['Models', 'Not bundled. You download them in the app, each verified with a checksum. The recommended one is about 164 MB.'],
 			['Network', 'Only when you download a model, use a cloud service, or check for updates.'],
-			['Notarization', 'No. The project has no budget for an Apple Developer ID.'],
+			['Notarization', 'Not notarized. macOS asks you to choose Open Anyway the first time.'],
 		],
 		whatsNew: 'In this release',
 		sourceSummary: 'Build from source',

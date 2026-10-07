@@ -13,8 +13,9 @@ Cadenza turns speech into text where your cursor is. Hold a shortcut, speak, rel
 
 ## 1. Install
 
-There is no release yet, so [build it from source](../download/). It takes a few minutes. When a release exists you will
-download a zip instead.
+[Download the zip](../download/) from GitHub Releases and unzip it. The app is not notarized, so macOS blocks the first launch:
+open **System Settings → Privacy & Security** and choose **Open Anyway**. You can also [build it from source](../download/#source)
+in a few minutes.
 
 ## 2. First run
 

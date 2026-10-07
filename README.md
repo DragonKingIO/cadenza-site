@@ -60,7 +60,7 @@ cloud account, and an open-source band with the build commands. All copy for the
 lives in `src/i18n/en.ts` and `src/i18n/zh.ts` (same shape, keep them in step); styles are in `src/styles/site.css`.
 
 The download page shows the latest GitHub release, read once at build time (`src/lib/release.ts`), so visitors' browsers make no
-request to GitHub; the daily scheduled build keeps it current. With no release yet it shows the "Soon" state and the build-from-source
+request to GitHub; the daily scheduled build keeps it current. Before the first release it showed the "Soon" state and the build-from-source
 steps.
 
 ## Naming

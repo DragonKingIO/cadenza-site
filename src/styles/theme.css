@@ -23,26 +23,34 @@
 .hero img { max-width: 160px; }
 .site-title img { height: 1.6rem; width: auto; }
 
-/* Keep the reading column and its outline together instead of splitting wide-screen
-   surplus into a large leading gutter and an oversized outline column. */
+/* Balance the reading area within the space left by the navigation. The outline
+   stays in a compact column at the right edge, rather than leaving unused space
+   beyond it. The text keeps comfortable margins and a bounded line length. */
 :root {
-	--sl-content-width: 64rem;
-	--cadenza-toc-width: 16rem;
+    --sl-content-width: 64rem;
+    --cadenza-toc-width: 14rem;
 }
 :root:lang(en) { --sl-content-width: 56rem; }
 @media (min-width: 72rem) {
-	[data-has-sidebar][data-has-toc] .main-pane {
-		flex: 0 1 auto;
-		min-width: 0;
-		width: min(
-			calc(100% - var(--cadenza-toc-width)),
-			calc(var(--sl-content-width) + 2 * var(--sl-content-pad-x))
-		);
-		--sl-content-margin-inline: 0;
-	}
-	[data-has-sidebar] .right-sidebar-container {
-		flex: 0 0 var(--cadenza-toc-width);
-		width: var(--cadenza-toc-width);
-	}
-	[data-has-sidebar] .right-sidebar { width: var(--cadenza-toc-width); }
+    [data-has-sidebar][data-has-toc] .main-frame > .lg\:sl-flex {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--cadenza-toc-width);
+        column-gap: clamp(2rem, 3vw, 4rem);
+        padding-inline: clamp(2rem, 3vw, 4rem);
+    }
+    [data-has-sidebar][data-has-toc] .main-pane {
+        min-width: 0;
+        width: 100%;
+        --sl-content-margin-inline: auto;
+    }
+    [data-has-sidebar] .right-sidebar-container {
+        width: var(--cadenza-toc-width);
+    }
+    [data-has-sidebar] .right-sidebar {
+        width: var(--cadenza-toc-width);
+        border-inline-start: 0;
+    }
+    [data-has-sidebar][data-has-toc] .main-pane .content-panel {
+        padding-inline: 0;
+    }
 }

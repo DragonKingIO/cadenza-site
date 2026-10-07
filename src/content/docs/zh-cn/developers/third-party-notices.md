@@ -20,11 +20,19 @@ Apple Speech 使用系统 Speech 框架。
 
 ## 本地推理（可选构建组件）
 
-存在 `third_party/sherpa-onnx` 时，构建会静态链接 [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) v1.13.8（Apache-2.0）及其发布包内的库：ONNX Runtime（MIT）、kaldi-native-fbank（Apache-2.0）、kaldi-decoder（Apache-2.0）、KissFFT（BSD-3-Clause）、OpenFst/kaldifst 与 sentencepiece（Apache-2.0）。完整许可文本随 `tools/fetch-sherpa-onnx.sh` 指定的上游发布包提供，分发二进制时需一并附上；公开发布前请对照上游发布包核对这些许可名称。
+存在 `third_party/sherpa-onnx` 时，构建会静态链接 [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) v1.13.8（Apache-2.0）及其包含的代码：ONNX Runtime 1.28.2（MIT，附其依赖的声明）、kaldi-native-fbank（Apache-2.0）、KISS FFT（BSD-3-Clause）、kaldi-decoder、kaldifst、OpenFst 与 simple-sentencepiece（Apache-2.0）、Eigen（MPL-2.0）、nlohmann/json（MIT）以及 hclust-cpp/fastcluster（BSD-2-Clause）。确切版本、来源和完整许可文本见 [licenses/](https://github.com/DragonKingIO/Cadenza-voice/blob/main/cadenza/licenses/README.md)，每次构建都会把这个文件夹连同本文件复制进应用（`Contents/Resources/Licenses`）。这份清单已对照链接库里的符号核对过。
 
 ## 下载的模型（不随软件打包）
 
 模型由用户在软件内下载，不属于本仓库或应用包。每个模型保留自己的许可证，随下载包一起提供，可在 设置 → 语音识别 → 本地 → 许可协议 中打开。内置清单目前提供 sherpa-onnx 转换的 SenseVoice Small（int8，2024-07-17）和 Silero VAD；再分发这些模型或基于它们做产品前，请先阅读包内的许可文件。远端更新清单里的模型由发布该清单的人负责。
+
+## 本机文字识别模型（未随软件分发）
+
+和语音模型一样，PP-OCR 文字识别模型由用户在应用里自行下载，不属于本仓库，也不在应用包里。它们由 [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) 项目及其转换者制作；每个模型包带有自己的许可证，再分发模型或基于它做产品之前请先阅读。`tools/fetch-sherpa-onnx.sh` 获取的 onnxruntime（MIT）头文件只是接口声明，用来调用已经链接的库；它们会被下载并做 SHA-256 校验，不提交进仓库。
+
+## 录音条角色动画
+
+`resources/character/` 里的四个短动画（`write`、`think`、`alert`、`error`）在设置里选择“角色”样式时代替声波显示。它们由 Guillaume（[@guillaume_rygn](https://x.com/guillaume_rygn)）用 [Dots Lab](https://dots-lab.pages.dev/) 制作，经作者同意收录。Dots Lab 页面没有声明许可协议，所以这些图片**不**适用本项目的 MIT 许可证：未经作者许可，请勿在本项目之外使用。
 
 ## 截图工具栏图标
 

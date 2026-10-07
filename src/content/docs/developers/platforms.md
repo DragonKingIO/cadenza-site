@@ -10,7 +10,7 @@ editUrl: https://github.com/DragonKingIO/Cadenza-voice/edit/main/cadenza/docs/PL
 This page is generated from [`cadenza/docs/PLATFORMS.md`](https://github.com/DragonKingIO/Cadenza-voice/blob/main/cadenza/docs/PLATFORMS.md) in the application repository. To change it, edit that file.
 :::
 
-**Cadenza runs on macOS 26 or later, on Apple silicon. That is the only supported platform**, and the project does not plan
+**Cadenza runs on macOS 14 or later, on Apple silicon and Intel Macs. macOS is the only supported platform**, and the project does not plan
 to add Windows or Linux itself in the near term.
 
 ## Why only macOS

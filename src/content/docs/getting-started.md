@@ -7,7 +7,7 @@ Cadenza turns speech into text where your cursor is. Hold a shortcut, speak, rel
 
 ## What you need
 
-- A Mac with Apple silicon running **macOS 26 or later**.
+- A Mac (Apple silicon or Intel) running **macOS 14 or later**.
 - About 200 MB of free space for the recommended local model (the app downloads it when you ask).
 - A microphone.
 

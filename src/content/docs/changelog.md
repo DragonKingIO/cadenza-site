@@ -3,6 +3,13 @@ title: Changelog
 description: What changed in each version.
 ---
 
+## 1.1.0 — early preview
+
+- One package for Apple silicon **and Intel** Macs; the minimum system is now **macOS 14** (it was macOS 26).
+- Recording bar: see-through glass in light mode; an optional character style with short animations.
+- On-device text recognition models for screenshots (PP-OCR).
+- Not yet verified on a real Intel Mac, or on macOS 14 and 15.
+
 ## 1.0.0 — early preview
 
 The first public build. It is used every day on the maintainer's Mac but has not been tested on many setups yet.

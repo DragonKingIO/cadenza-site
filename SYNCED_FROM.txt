@@ -1,1 +1,1 @@
-Technical documents were last synced from the application repository at commit 8345ada4054c.
+Technical documents were last synced from the application repository at commit a4bb4cdc8145.

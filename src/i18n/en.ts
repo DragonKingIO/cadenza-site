@@ -17,7 +17,7 @@ export const en = {
 		lede: 'Hold a key, speak, and the text appears at your cursor. Recognition runs locally, not on someone else\'s server.',
 		download: 'Download for macOS',
 		github: 'GitHub',
-		meta: ['MIT license', 'macOS 26+', 'Apple silicon'],
+		meta: ['MIT license', 'macOS 14+', 'Apple silicon and Intel'],
 		video: '/video/intro-en.mp4',
 		videoLabel: 'Cadenza in 15 seconds',
 		soundOn: 'Sound on',
@@ -57,7 +57,7 @@ cd Cadenza-voice
 	download: {
 		eyebrow: 'Download',
 		title: 'Get Cadenza.',
-		lede: 'For macOS 26 or later on Apple silicon.',
+		lede: 'For macOS 14 or later, on Apple silicon and Intel Macs.',
 		soon: 'Soon',
 		stamp: 'Early preview',
 		noRelease: 'The first release is on its way. Until it is out, you can build Cadenza yourself in a few minutes.',
@@ -75,8 +75,8 @@ cd Cadenza-voice
 		step3: { title: 'Allow three permissions', text: 'Microphone, Accessibility and Input Monitoring, when asked. macOS asks again after each update because every build is signed ad hoc.' },
 		reqsTitle: 'Good to know',
 		reqs: [
-			['System', 'macOS 26 or later'],
-			['Chip', 'Apple silicon'],
+			['System', 'macOS 14 or later'],
+			['Chip', 'Apple silicon or Intel'],
 			['Models', 'Not bundled. You download them in the app, each verified with a checksum. The recommended one is about 164 MB.'],
 			['Network', 'Only when you download a model, use a cloud service, or check for updates.'],
 			['Notarization', 'Not notarized. macOS asks you to choose Open Anyway the first time.'],
@@ -129,7 +129,7 @@ cd Cadenza-voice
 		platforms: {
 			id: 'platforms', toc: 'Platforms', title: 'Platforms',
 			lead: 'Cadenza is built on macOS-only interfaces. Other systems would be separate projects.',
-			rows: [['macOS', 'Early preview', 'macOS 26 or later, Apple silicon', true], ['Windows', 'Not planned', 'Ports are welcome as separate projects', false], ['Linux', 'Not planned', 'Ports are welcome as separate projects', false]],
+			rows: [['macOS', 'Early preview', 'macOS 14 or later, Apple silicon and Intel', true], ['Windows', 'Not planned', 'Ports are welcome as separate projects', false], ['Linux', 'Not planned', 'Ports are welcome as separate projects', false]],
 			link: 'Why only macOS, and what a port could reuse',
 		},
 		license: {

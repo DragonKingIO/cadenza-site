@@ -19,7 +19,7 @@ export const zh: Content = {
 		lede: '按住一个键说话，文字就出现在光标处。识别在本地完成，不经过别人的服务器。',
 		download: '下载 macOS 版',
 		github: 'GitHub',
-		meta: ['MIT 许可证', 'macOS 26+', 'Apple 芯片'],
+		meta: ['MIT 许可证', 'macOS 14+', 'Apple 芯片与 Intel'],
 		video: '/video/intro-zh.mp4',
 		videoLabel: '15 秒看懂随言',
 		soundOn: '打开声音',
@@ -59,7 +59,7 @@ cd Cadenza-voice
 	download: {
 		eyebrow: '下载',
 		title: '获取随言。',
-		lede: '适用于 Apple 芯片、macOS 26 及以上。',
+		lede: '适用于 macOS 14 及以上，Apple 芯片和 Intel 的 Mac 都可以。',
 		soon: '即将发布',
 		stamp: '早期预览',
 		noRelease: '第一个版本正在路上。在它发布之前，你可以自己构建，几分钟即可。',
@@ -77,8 +77,8 @@ cd Cadenza-voice
 		step3: { title: '允许三项权限', text: '按提示允许麦克风、辅助功能和输入监控。因为每个构建都是临时签名，每次更新后 macOS 会再次询问。' },
 		reqsTitle: '先了解一下',
 		reqs: [
-			['系统', 'macOS 26 或更高版本'],
-			['芯片', 'Apple 芯片'],
+			['系统', 'macOS 14 或更高版本'],
+			['芯片', 'Apple 芯片或 Intel'],
 			['模型', '不随应用打包，在应用里下载，每个都有校验。推荐的那个约 164 MB。'],
 			['网络', '只有下载模型、使用云端服务或检查更新时才会用到。'],
 			['公证', '没有公证。第一次打开时，macOS 会要你点“仍要打开”。'],
@@ -131,7 +131,7 @@ cd Cadenza-voice
 		platforms: {
 			id: 'platforms', toc: '平台', title: '平台',
 			lead: '随言建立在只有 macOS 才有的接口上，其他系统需要另起项目。',
-			rows: [['macOS', '早期预览', 'macOS 26 及以上，Apple 芯片', true], ['Windows', '暂无计划', '欢迎另起项目移植', false], ['Linux', '暂无计划', '欢迎另起项目移植', false]],
+			rows: [['macOS', '早期预览', 'macOS 14 及以上，Apple 芯片与 Intel', true], ['Windows', '暂无计划', '欢迎另起项目移植', false], ['Linux', '暂无计划', '欢迎另起项目移植', false]],
 			link: '为什么只做 macOS，以及移植可以复用什么',
 		},
 		license: {

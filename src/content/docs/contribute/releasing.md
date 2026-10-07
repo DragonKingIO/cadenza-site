@@ -58,12 +58,12 @@ after an update.
 - …
 
 ## Install
-1. Download `Cadenza-X.Y.Z-macos-arm64.zip` and unzip it.
+1. Download `Cadenza-X.Y.Z-macos-universal.zip` and unzip it.
 2. Open the app. macOS blocks the first launch because the app is not notarized: open System Settings → Privacy & Security,
    scroll to the message about the app and choose **Open Anyway**.
 3. Allow Microphone, Accessibility and Input Monitoring when asked.
 
-Requires macOS 26 or later on Apple silicon.
+Requires macOS 14 or later (Apple silicon or Intel).
 
 ## Verify
 `shasum -a 256 -c SHA256SUMS.txt`
@@ -73,8 +73,7 @@ Requires macOS 26 or later on Apple silicon.
 - …
 ```
 
-## Why no notarization
+## Notarization
 
-Notarization needs a paid Apple Developer ID. The project is a volunteer open-source effort without a budget for it, so it
-ships ad hoc builds and says so plainly. Anyone can build from source. If a sponsor or the community later covers the
-fee, releases can be notarized without changing the app.
+Releases are signed ad hoc and not notarized, and say so plainly. Anyone can build from source. If releases are notarized
+later, the app does not change.

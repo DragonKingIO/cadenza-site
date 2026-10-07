@@ -47,6 +47,7 @@ export default defineConfig({
 					translations: { 'zh-CN': '使用指南' },
 					items: [
 						{ slug: 'engines', label: 'Recognition engines', translations: { 'zh-CN': '识别引擎' } },
+						{ slug: 'cloud-credentials', label: 'Cloud API keys', translations: { 'zh-CN': '云端 API 密钥教程' } },
 						{ slug: 'compare-models', label: 'Compare models with your voice', translations: { 'zh-CN': '用我的声音比较模型' } },
 						{ slug: 'shortcuts-and-permissions', label: 'Shortcuts and permissions', translations: { 'zh-CN': '快捷键与权限' } },
 						{ slug: 'troubleshooting', label: 'Troubleshooting', translations: { 'zh-CN': '常见问题' } },

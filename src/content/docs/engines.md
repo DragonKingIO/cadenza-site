@@ -51,3 +51,5 @@ connections. Local models must already be downloaded.
 On a benchmark of synthesized Mandarin speech, SenseVoice reached about 10% character error rate overall and about
 1% on short sentences; FireRedASR2 about 10.6%. Synthesized speech is cleaner than a person and the benchmark cannot
 measure your voice or accent, so treat the numbers as a guide. See the [accuracy benchmark](../developers/accuracy/).
+
+[See where to find each provider’s keys and fill in the fields](../cloud-credentials/).

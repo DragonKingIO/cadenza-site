@@ -1,6 +1,7 @@
-// Navigation opens a separate tab; in-page outlines and accessibility skip links stay in place.
+// Sidebar navigation stays in this tab; other navigation opens a separate tab.
 export const newWindowLinksScript = `(function(){
 function prepare(link){
+ if(link.closest('#starlight__sidebar')){link.removeAttribute('target');return;}
  var href=link.getAttribute('href');
  if(!href || href.charAt(0)==='#')return;
  var url;try{url=new URL(href,location.href)}catch(e){return}

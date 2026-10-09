@@ -3,6 +3,16 @@ title: Changelog
 description: What changed in each version.
 ---
 
+## 1.2.0 — early preview
+
+- **Voice translation has its own shortcut and page.** Ordinary dictation no longer translates. If you had a language chosen, set a translate shortcut to keep translating.
+- **Shortcuts:** "Hold to talk" and "Tap to start and stop" are two rows, each with its own switch. The Hold/Tap choice is gone.
+- **More cloud speech services:** OpenAI, Groq, Google Cloud, Microsoft Azure, AssemblyAI and ElevenLabs, plus any OpenAI-compatible service. Not yet tested against the real services.
+- **More cloud text recognition:** Microsoft Azure AI Vision and Mistral OCR. One key per company is shared across speech, text recognition and My AI models.
+- Quiet speech: local models read soft recordings with noise reduction when a steady room noise is close to the voice.
+- Vocabulary packs, text tidying, AI polish and "My AI models" for polishing and translation.
+- Not notarized; macOS 14 or later, Apple silicon or Intel.
+
 ## 1.1.0 — early preview
 
 - One package for Apple silicon **and Intel** Macs; the minimum system is now **macOS 14** (it was macOS 26).

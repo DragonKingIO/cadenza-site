@@ -3,11 +3,11 @@ title: Cloud speech — registration and setup
 description: Enable cloud speech services, find your credentials and fill in the matching fields.
 ---
 
-This guide is for **speech-to-text (ASR)**. For screenshots and images, use the separate [cloud OCR setup guide](../ocr-cloud-credentials/). Service activation, permissions and upload consent are separate.
+This guide is for **speech-to-text (ASR)**. For screenshots and images, use the separate [cloud OCR setup guide](../ocr-cloud-credentials/). A key for the same company can serve speech and text recognition (see the OCR guide); service activation, permissions and upload consent are separate.
 
 ## Account and region guide
 
-**Start with Deepgram if you want an English-language cloud setup.** Local recognition needs no cloud account. Cadenza currently supports Deepgram plus five China-based speech integrations; OpenAI and ElevenLabs are not yet available in the app.
+**Start with Deepgram if you want an English-language cloud setup.** Local recognition needs no cloud account. Cadenza supports Deepgram, OpenAI, Groq, Google Cloud, Microsoft Azure, AssemblyAI, ElevenLabs, five China-based services (iFLYTEK, Volcengine, Tencent Cloud, Alibaba Cloud, Baidu), and any service that copies the OpenAI transcription API.
 
 | Provider | Registration or sign-in | Integration scope |
 | --- | --- | --- |
@@ -17,6 +17,13 @@ This guide is for **speech-to-text (ASR)**. For screenshots and images, use the 
 | Volcengine | [China console](https://console.volcengine.com/) | Doubao Speech; BytePlus credentials are not interchangeable |
 | Baidu | [Account portal](https://login.bce.baidu.com/) | China speech service; console may be Chinese |
 | iFLYTEK | [Open platform](https://www.xfyun.cn/) | China speech dictation service; console may be Chinese |
+| OpenAI | [API platform](https://platform.openai.com/) | Pay per request; the key is also used by My AI models |
+| Groq | [Console](https://console.groq.com/) | Whisper models; the key is also used by My AI models |
+| Google Cloud | [Cloud console](https://console.cloud.google.com/) | Speech-to-Text with an API key; the same key serves Google text recognition |
+| Microsoft Azure | [Azure portal](https://portal.azure.com/) | Speech resource with its key and region; a multi-service key also serves Azure text recognition |
+| AssemblyAI | [Dashboard](https://www.assemblyai.com/dashboard/api-keys) | Short recordings (up to two minutes), one call |
+| ElevenLabs | [ElevenLabs](https://elevenlabs.io/) | Scribe speech to text; up to five minutes |
+| Other OpenAI-compatible service | Your provider's documentation | Address, model and key are yours to fill in |
 
 Changing the UI language does not change your primary engine, account region or upload destination. International and China accounts must not be assumed to share credentials or service activation. The translated screenshots below are references for the China consoles, not international-console walkthroughs.
 
@@ -96,12 +103,91 @@ Field reference, without step-by-step screenshots: open the [iFLYTEK console](ht
 
 [Official iFLYTEK authentication guide](https://www.xfyun.cn/doc/asr/voicedictation/API.html)
 
+## OpenAI setup
+
+<a id="openai"></a>
+
+1. Sign in at the [OpenAI API platform](https://platform.openai.com/) and add billing. Speech recognition is charged per request.
+2. Open [API keys](https://platform.openai.com/api-keys), create a key and copy it. It is shown once.
+3. In Cadenza choose **OpenAI**, pick a model (`gpt-4o-mini-transcribe` is the default; `whisper-1` is the older model), and paste the key into **API Key**.
+4. Read the upload explanation (the whole recording is sent to OpenAI when you release the key, up to five minutes), allow it, and test the connection. The test reads the model list and sends no audio.
+
+The same OpenAI key is used by My AI models, so you enter it once. [Official speech-to-text guide](https://platform.openai.com/docs/guides/speech-to-text)
+
+## Groq setup
+
+<a id="groq"></a>
+
+1. Create an account at the [Groq console](https://console.groq.com/) and open [API keys](https://console.groq.com/keys).
+2. Create a key and copy it.
+3. In Cadenza choose **Groq**, pick a Whisper model (`whisper-large-v3-turbo` is the default) and paste the key into **API Key**.
+4. Allow the upload as above and test. Groq limits requests and file sizes on its plans; the service's message says so when a limit is reached.
+
+The key is also used by My AI models. [Official speech-to-text guide](https://console.groq.com/docs/speech-to-text)
+
+## Other OpenAI-compatible services
+
+<a id="compat"></a>
+
+Any service that copies the OpenAI transcription API can be used, with its own address, model and key. Cadenza offers three presets, each with the address and model from its documentation:
+
+- **Together AI**: `https://api.together.xyz/v1`, model `openai/whisper-large-v3`
+- **Mistral (Voxtral)**: `https://api.mistral.ai/v1`, model `voxtral-mini-latest`
+- **SiliconFlow**: `https://api.siliconflow.cn/v1`, model `FunAudioLLM/SenseVoiceSmall`
+
+Check a preset against the provider's current documentation before you rely on it. A Whisper server on this Mac also works: use `http://127.0.0.1` or `http://localhost` with its port, and nothing leaves the Mac. An address must be `https`; `http` is accepted only for this Mac (`127.0.0.1` or `localhost`). An address must not contain a user name, password or query string. The key is sent only to the address you enter, and the permission sheet names that address.
+
+## Google Cloud Speech-to-Text setup
+
+<a id="google"></a>
+
+1. Create or select a project in the [Google Cloud console](https://console.cloud.google.com/) and enable billing. Speech-to-Text is a paid service with a limited free tier.
+2. Enable the **Cloud Speech-to-Text API** for the project.
+3. Open [APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials), create an **API key**, and restrict it to the Speech-to-Text API.
+4. In Cadenza choose **Google**, paste the key into **API Key**, and name the language of your recordings. The same key serves Google text recognition, so you enter it once.
+5. Allow the upload and test. Recordings are limited to one minute.
+
+[Official Speech-to-Text documentation](https://cloud.google.com/speech-to-text/docs)
+
+## Microsoft Azure Speech setup
+
+<a id="azure"></a>
+
+1. Sign in to the [Azure portal](https://portal.azure.com/) and create a **Speech** resource.
+2. Open the resource's **Keys and Endpoint** page. Copy one key and note the **region**, for example `eastus`.
+3. In Cadenza choose **Azure**, paste the key into **API Key** and the region into the region field. The resource address from the portal also works, as long as it is `https` on a Microsoft Azure host.
+4. Name the language of your recordings. Recordings are limited to one minute. Azure's recognizer keeps words as spoken and does not take your vocabulary.
+
+A multi-service Azure key also serves Azure text recognition; a key for a Speech-only resource does not read pictures. [Official Speech documentation](https://learn.microsoft.com/azure/ai-services/speech-service/)
+
+## AssemblyAI setup
+
+<a id="assemblyai"></a>
+
+1. Create an account at [AssemblyAI](https://www.assemblyai.com/) and open the [API keys dashboard](https://www.assemblyai.com/dashboard/api-keys).
+2. Copy the key into **API Key** in Cadenza, and choose **AssemblyAI**.
+3. Name the language. If you do not, English is assumed. Recordings are limited to two minutes; the short-clip service takes one request per recording.
+4. Allow the upload and test. The test reads your transcripts list and sends no audio.
+
+[Official documentation](https://www.assemblyai.com/docs)
+
+## ElevenLabs Scribe setup
+
+<a id="elevenlabs"></a>
+
+1. Create an account at [ElevenLabs](https://elevenlabs.io/) and create an API key in your account settings.
+2. In Cadenza choose **ElevenLabs**, paste the key into **API Key**, and allow the upload.
+3. Scribe detects the language unless you name it. Recordings are limited to five minutes. It does not add sound descriptions such as laughter.
+4. Test the connection; the test reads the model list and sends no audio.
+
+[Official documentation](https://elevenlabs.io/docs)
+
 ## After filling in the fields
 
 1. Read the audio-upload explanation and decide whether to allow this provider. Without consent, the app does not connect to it.
 2. Click **Test connection** and read the feedback beside it. The check tests connection and authentication, sends no recording, and does not replace a recognition test.
 3. Click **Save**, select the provider as your primary model, and try a sentence on the input page.
 
-Cancelling stops subsequent uploads but cannot recall audio already sent during streaming. Do not put keys in feedback, screenshots or public documentation.
+Cancelling stops subsequent uploads but cannot recall audio already sent, whether streamed while you speak or sent as a whole recording when you release the key. Do not put keys in feedback, screenshots or public documentation.
 
 *Original tutorial: Lulu, 2026-10-07. Adapted with field references for this app.*

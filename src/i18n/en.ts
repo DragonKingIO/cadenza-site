@@ -25,7 +25,7 @@ export const en = {
 		featuresKicker: 'Features',
 		featuresTitle: 'Small, quiet, and yours.',
 		features: [
-			{ icon: 'mic', title: 'Voice typing', text: 'The text lands at your cursor in the app you are using. If it cannot, it is kept for you to copy.' },
+			{ icon: 'mic', title: 'Voice typing', text: 'The text lands at your cursor in the app you are using. Set a second shortcut to type a translation instead. If it cannot be typed, it is kept for you to copy.' },
 			{ icon: 'scan', title: 'Screenshots and text recognition', text: 'Capture, mark up, pin, and copy the text or QR code in a picture.', tag: 'New' },
 			{ icon: 'compare', title: 'Models you can compare', text: 'Record a sentence once and see which local model understands your voice best.' },
 			{ icon: 'plug', title: 'For developers and AI hardware', text: 'An optional local API turns speech from your own programs, pendants or glasses into text.' },
@@ -37,7 +37,7 @@ export const en = {
 		localItems: ['SenseVoice', 'FireRedASR2', 'Parakeet'],
 		cloudTitle: 'Your own cloud account',
 		cloudNote: 'Audio is sent only after you agree, provider by provider.',
-		cloudItems: ['iFLYTEK', 'Volcengine', 'Tencent Cloud', 'Alibaba Cloud', 'Baidu', 'Deepgram'],
+		cloudItems: ['OpenAI', 'Groq', 'Google Cloud', 'Azure', 'AssemblyAI', 'ElevenLabs', 'iFLYTEK', 'Volcengine', 'Tencent Cloud', 'Alibaba Cloud', 'Baidu', 'Deepgram'],
 		enginesNote: 'No account, no analytics, no crash reports. A "never go online" switch hides every option that could connect.',
 		privacyLink: 'Read the privacy promise',
 		openKicker: 'Open source',

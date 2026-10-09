@@ -93,7 +93,153 @@ The pipeline gives bounded extra time to local final decoding for long recording
 | East Asian languages (SenseVoice) | `sensevoice` | zh, en, ja, ko, yue | about 164 MB | Recommended default, verified on synthesized and speaker-to-microphone speech |
 | High-accuracy Chinese (FireRedASR2) | `fire-red-ctc` | zh, en | about 521 MB | Experimental. Installed and run with the real package (`model.int8.onnx`, `tokens.txt`, `silero_vad.onnx` as expected). On the synthesized-speech benchmark its character error rate matches SenseVoice (10.6% vs 10.0%), but it writes no punctuation, keeps spoken numbers as words, and decodes about four times slower. Use "Compare models with my voice" to check it on your own speech |
 | European languages (Parakeet TDT v3) | `parakeet-tdt` | 25 European languages | about 488 MB | Experimental |
+| Chinese with English words, fastest (Paraformer) | `paraformer` | zh, en | about 244 MB | Experimental. DAMO's Paraformer-large int8 from Hugging Face (file checksums published by the host). Fastest of the Chinese models, no punctuation. Installed and read with the real files. |
+| Most accurate in our tests, multilingual (Qwen3-ASR) | `qwen3-asr` | zh, en, yue, ja, ko and more | about 879 MB | Experimental. Qwen3-ASR 0.6B int8 (ONNX export by Wasser1462, sherpa-onnx release). Writes punctuation, about a second for a short sentence, the first install takes a minute or two. Installed and read with the real files. |
+
+The benchmark below was run with `--accuracy-benchmark --bench-quick` on the same 105 synthesized clips per model (several system voices, seven conditions; Chinese sentences, a few with English words), character error rate, lower is better. Synthesized speech is cleaner than a person, the mixed-language group is only a few sentences, and the numbers say nothing about other languages, so treat it as a comparison on identical audio, not a ranking for every voice:
+
+| Model | Overall | Chinese with English words | Time for the 105 clips (4 at a time) |
+|---|---|---|---|
+| Qwen3-ASR 0.6B int8 | 0.8% | 0.0% | 81 s |
+| Paraformer-large int8 | 1.8% | 20.0% | 9 s |
+| SenseVoice (recommended default) | 2.0–2.2% | 24.8% | fast |
+| FireRedASR2 CTC | 2.5% | 33.3% | 52 s |
+
+### Speed and memory (shown in the model list)
+
+Every built-in model carries a `profile` in the model list (`LocalModelProfile`), and the Settings page prints it under the model as one line, for example "Speed: fast · 10 s of speech takes about 0.6 s · about 594 MB of memory · with punctuation". The numbers come from `Cadenza --bench-speed --bench-model=<kind>:<folder>`, run once per model in its own process (memory that was used does not shrink): load time, then three timed runs of each of five synthesized sentences of 4.6–7.2 s after one warm-up, 2 threads, on one Apple silicon Mac. The speed word follows the real-time factor: under 0.10 fast, under 0.20 medium, otherwise slow. Memory is the whole app's resident size after loading and using the model, so it includes about 26 MB for the app itself.
+
+| Model | Load | Memory | 10 s of speech takes | Punctuation |
+|---|---|---|---|---|
+| Paraformer-large int8 | 0.5 s | 557 MB | 0.5 s | no |
+| SenseVoice int8 | 0.4 s | 594 MB | 0.6 s | yes |
+| Parakeet TDT v3 int8 (English clips) | 0.8 s | 1.2 GB | 1.2 s | yes |
+| Qwen3-ASR 0.6B int8 | 1.4 s | 1.8 GB | 2.4–2.8 s | yes |
+| FireRedASR2 CTC int8 | 0.7 s | 1.3 GB | 3.1 s | no (English comes out in capitals) |
+
+For the text recognition sets, one line of text takes about 30 ms (17–36 ms for the three test pictures) and the app holds about 142 MB with PP-OCRv5 and 113 MB with PP-OCRv4. Re-measure and update the `profile` when a model or the recognizer changes; the values are data, not behaviour, so they never affect how a model runs.
+
+Models that are not installed can be compared with `--bench-model=<kind>:<folder>` (repeatable), e.g. `--bench-model=paraformer:/path/to/folder`.
+`Cadenza --selftest-local-model-download=<id>` downloads one built-in speech model with the app's own downloader into a temporary folder,
+loads it, reads two synthesized sentences and deletes it again; with `CADENZA_MODEL_IMPORT=<file>,<file>` it installs files you already have.
 
 Automatic selection never depends on install order: among installed models for the language, the recommended one wins.
 A model the user picked explicitly ("Use") is always honoured. To compare models on the same sentences, run
 `Cadenza --local-accuracy-probe` (developer tool; uses the system voice, so it isolates the model, not the microphone).
+
+## Compare with your own voice
+
+Settings → Speech → Local models → "Compare models with my voice" records a few sentences in memory and runs them through
+every way of recognizing that is set up: installed local models that cover the app's language, cloud services that have saved
+credentials **and** upload consent (`CompareCandidates.cloudReady`), and the Mac's built-in recognizer when it can run on the
+device. Anything not downloaded or not configured is not listed. Cloud services receive the recordings only while ticked and
+are marked "Uploads recording"; the app locked to local recognition lists none. A cloud service runs through the same
+recorder as a real dictation (`CloudClipTranscriber`), so a failure (no network, rejected credentials, no answer in 30 s) is
+shown as a failure, never as a 100% error rate. For cloud services the time column is the wait after the audio ends, not
+decoding time.
+
+## Do the models already leave out hesitation sounds?
+
+`Cadenza --bench-fillers` speaks nine sentences that contain "呃", "嗯", "那个", stutters and English "um", "uh", "like" with the
+system voices, has each installed local model write them, and shows what the "Tidy the text" step (Standard and Thorough) changes.
+Synthetic voices say fillers more cleanly than people do, so the figures are a lower bound. Measured on one Mac:
+
+| Model | Hesitation sounds the model wrote (of 9) | Changed by Standard | What the model does by itself |
+|---|---|---|---|
+| SenseVoice | 3 | 4 | Drops English "Um," but writes "uh" as "a" and 呃 as 饿 (a real word, so nothing can remove it); keeps 呃, 嗯 and every stutter ("我我我想", "这个这个") |
+| FireRed ASR2 | 4 | 5 | Keeps all of them; writes no punctuation |
+| Parakeet TDT v3 | 4 | 4 | English only; keeps "uh" and "I I I" |
+
+So none of the installed models filters these by itself, and the tidy step has real work to do for each. Skipping it per engine
+would not help; the step only fires where the text has something to fix. For Apple's recognizer and the cloud services the
+app cannot measure this itself, so each dictation writes one log line with counts only (`polish engine=… hesitations=… repeats=…
+connectors=… changed=… chars=a->b`, never the text); read your own log to see which engine needs it. Cloud services have their own
+filters too (Settings → Speech → Cloud → "Filter filler words": Tencent `filter_modal`, Aliyun `disfluency`, Volcengine `enable_ddc`).
+The measurement found two gaps, now closed: a 嗯 between two words with no mark around it ("方案的话嗯成本"), and three repeats in
+a row in English ("I I I think").
+
+## Soft speech and noisy rooms
+
+`Cadenza --bench-quiet` (add `--bench-quiet-enhance=off` for the "before" figures) speaks 12 sentences with the system voice,
+scales the speech to a chosen level, adds steady room noise of a chosen level, rounds the result to 16 bits like a microphone's
+converter, and has each installed Chinese-capable local model read it. A value of 100 means the model wrote nothing usable.
+Levels are the digital level of the signal (dBFS, RMS of the louder frames): normal speech at arm's length is about −28, a
+whisper about −45 to −55. They are **not** sound pressure in dB SPL, which depends on the microphone and its gain, so no claim
+about decibels in the room can be made from this table.
+
+What changed (all on this Mac, on the audio already in memory):
+
+- A gentle 80 Hz high-pass and, when the recording has a steady room noise close to the speech level, spectral subtraction
+  (`SpeechEnhancer`: the noise spectrum is learned from the quietest 20% of frames; strength 2.5, floor 0.05, picked by
+  measurement). A recording that is already clean (24 dB or more between its loud and quiet frames) is only high-passed.
+- The existing levelling step (up to ×30) now runs on the cleaned audio, so a hum no longer sets its gain.
+- Cloud services and Apple's recognizer: recordings whose loudest moment was under a fixed level were dropped as "silence", which
+  also dropped every whisper. `SpeechPresence` now compares the recording with its own room: a stretch that stands 2.5 times above
+  the quiet part for about a tenth of the recording is speech however soft; a room alone, a cough or digital silence is still
+  dropped. The audio sent to those services is not changed (no keys here to measure it).
+
+**SenseVoice** — character error rate, %, before → after:
+
+| Speech level (dBFS RMS) | silent room | fan, −45 dBFS | white noise −65 | white noise −55 | white noise −45 |
+|---|---|---|---|---|---|
+| −28 (normal) | 2.3 | 2.2 | 3.4 → **2.8** | 2.2 | 2.8 → **2.2** |
+| −40 | 2.2 | 11.3 → **3.7** | 2.2 | 2.8 → **2.2** | 4.6 → **4** |
+| −50 (whisper) | 2.2 | 100 → **32.5** | 2.8 | 4.6 → **4** | 100 → **11.4** |
+| −58 (soft whisper) | 2.2 | 100 | 4.1 → **3.4** | 100 → **5.7** | 100 |
+| −66 | 2.2 | 100 | 100 → **5.7** | 100 | 100 |
+
+**FireRed ASR2** — character error rate, %, before → after:
+
+| Speech level (dBFS RMS) | silent room | fan, −45 dBFS | white noise −65 | white noise −55 | white noise −45 |
+|---|---|---|---|---|---|
+| −28 (normal) | 2.8 | 2.8 → **3.3** | 2.8 | 3.3 → **2.8** | 3.3 → **2.8** |
+| −40 | 2.8 | 12.6 → **3** | 2.8 | 3.3 → **2.8** | 5.5 |
+| −50 (whisper) | 4 → **3.4** | 100 → **35.5** | 3.4 → **2.8** | 3.5 → **4.7** | 100 → **16.3** |
+| −58 (soft whisper) | 3.4 | 100 | 4.7 | 100 → **11.1** | 100 |
+| −66 | 3.4 | 100 | 100 → **11.4** | 100 | 100 |
+
+Reading the table: soft speech in a quiet room was already fine (levelling does that); the gains are where a steady noise sits
+close to or above the speech. White noise is the harshest case (it covers every frequency); a fan's low rumble is closer to a
+real room. Differences of about one point (for example 2.8 and 3.3) are within the variation of 12 sentences. When the noise is
+more than about 10 dB louder than the speech (a whisper at −58 under white noise at −45, or speech at −66 under noise at −55)
+nothing recovers the words, and the tool does not pretend otherwise. Synthetic speech and noise are cleaner than a real
+microphone in a real room; this has not been measured on real recordings.
+
+## Translating dictation with a model on this Mac
+
+`Cadenza --bench-translate` sends twelve dictated sentences (with hesitations, as a recognizer writes them) through a chat service
+the way the app does: six into English, three into Japanese, three into Simplified Chinese, one of them an attempt to give the
+model instructions. It counts the answers the app would use, the answers its own checks refuse (wrong language, words of the
+other language left in the middle, a missing number or term), and the facts a good translation must keep (a time, an amount, a
+name). Qwen2.5 through Ollama, one run each, the request temperature is 0.2 so a second run differs a little:
+
+| Model | Run | Answers used | Refused by the checks | Facts kept | Time per sentence |
+|---|---|---|---|---|---|
+| Qwen2.5 3B (1.9 GB) | first | 12 | 0 | 29 / 30 | 0.6 s |
+| Qwen2.5 3B | after the prompt and check were tightened | 11 | 1 | 24 / 30 (the refused one counts as lost) | 0.8 s |
+| Qwen2.5 7B (4.7 GB) | first | 12 | 0 | 29 / 30 | 1.6 s (the first request took 7 s to load the model) |
+| Qwen2.5 7B | after the prompt and check were tightened | 11 | 1 | 26 / 30 (the refused one counts as lost) | 1.8 s |
+
+What the printed sentences showed, which is the real evidence:
+
+- Both models translate plain sentences into English well enough to send, in under two seconds.
+- Both sometimes give up halfway: a Japanese answer with English and Chinese words left in it (3B), an English answer with one
+  Chinese word left in the middle (7B). The first version of the check accepted both. It now refuses them, and the dictation is
+  inserted untranslated with a note, which is better than a sentence in two languages.
+- Chinese amounts are the weak spot: "二十五万" came back as "twenty-five thousand" from both models. The prompt now states that
+  万 is ten thousand with that very example; the 7B model then answered "250,000", the 3B model still did not. The check cannot
+  catch this, because the original has no digits to compare. Amounts in Chinese units deserve a glance, or a larger model.
+- "ship it on Friday" was translated as "进行" (go ahead) by the 3B model. Idioms are where a small model loses meaning.
+
+So: for translation on this Mac, 7B is the better choice when about 5 GB of memory can be spared, 3B is acceptable for short
+plain sentences, and neither is something to send unread. Cloud models were not measured here. Twelve sentences and one model
+family is a small sample: the table shows what the checks do, not how good a model is.
+
+## What Apple Vision reads
+
+`Cadenza --selftest-ai-ocr-real` was a one-off measurement and is gone; its result is kept here. Apple Vision (the built-in way to
+read a screenshot, on this Mac) read two drawn lines in each of eleven languages with clean fonts: exact for Japanese, Korean,
+Hindi, Vietnamese, French, German, Traditional Chinese, Arabic and Thai; for Russian exact except one dash read as a hyphen; and
+nothing for Greek. On small, tilted or noisy text it made mistakes a larger model did not (a Chinese line lost at 11 pt, spaces and a
+thousands comma lost), which is where the PP-OCR models and the online services are the better choice. These are drawn pictures,
+not photographs or handwriting.

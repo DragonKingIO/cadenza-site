@@ -27,7 +27,7 @@ export const zh: Content = {
 		featuresKicker: '功能',
 		featuresTitle: '小巧、安静，只属于你。',
 		features: [
-			{ icon: 'mic', title: '语音输入', text: '文字写到你正在用的应用里、光标所在的位置；写不进去时会保留下来，方便你复制。' },
+			{ icon: 'mic', title: '语音输入', text: '文字写到你正在用的应用里、光标所在的位置。再设一个翻译快捷键，就能直接输入译文；写不进去时会保留下来，方便你复制。' },
 			{ icon: 'scan', title: '截图与文字识别', text: '截图、标注、贴在屏幕上，一键取出图里的文字和二维码。', tag: '新' },
 			{ icon: 'compare', title: '用你的声音比较模型', text: '录一句话，就能看出哪个本地模型最听得懂你。' },
 			{ icon: 'plug', title: '接入开发者和 AI 硬件', text: '可选的本地接口，把你的程序、挂件或眼镜里的声音变成文字。' },
@@ -39,7 +39,7 @@ export const zh: Content = {
 		localItems: ['SenseVoice', 'FireRedASR2', 'Parakeet'],
 		cloudTitle: '你自己的云端账号',
 		cloudNote: '只有你对该服务商同意之后，才会发送音频。',
-		cloudItems: ['讯飞', '火山引擎', '腾讯云', '阿里云', '百度', 'Deepgram'],
+		cloudItems: ['OpenAI', 'Groq', 'Google Cloud', 'Azure', 'AssemblyAI', 'ElevenLabs', '讯飞', '火山引擎', '腾讯云', '阿里云', '百度', 'Deepgram'],
 		enginesNote: '没有账号，没有统计，没有崩溃上报。“永不联网”开关会隐藏一切可能联网的选项。',
 		privacyLink: '阅读隐私承诺',
 		openKicker: '开源',

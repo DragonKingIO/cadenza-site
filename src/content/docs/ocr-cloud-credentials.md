@@ -1,11 +1,11 @@
 ---
 title: Cloud OCR — registration and setup
-description: Set up Google Cloud Vision, Tencent Cloud or Baidu for screenshot text recognition.
+description: Set up Google Cloud Vision, Microsoft Azure AI Vision, Mistral OCR, Tencent Cloud or Baidu for screenshot text recognition.
 ---
 
 OCR reads text in **screenshots and images**. It does not transcribe speech. For audio, use [cloud speech setup](../cloud-credentials/).
 
-Cadenza currently supports **Google Cloud Vision, Tencent Cloud OCR and Baidu OCR**, alongside on-device Apple Vision and downloadable PP-OCR models. Local OCR needs no cloud key. Alibaba OCR, OpenAI and other vision services are not current OCR options in this app.
+Cadenza currently supports **Google Cloud Vision, Microsoft Azure AI Vision, Mistral OCR, Tencent Cloud OCR and Baidu OCR**, alongside on-device Apple Vision and downloadable PP-OCR models. Local OCR needs no cloud key. Alibaba OCR and other vision services are not current OCR options in this app.
 
 These are text instructions based on provider documentation, without account walkthrough screenshots or live-account acceptance. Console labels and account eligibility may vary. Review provider pricing before enabling a service.
 
@@ -20,6 +20,28 @@ These are text instructions based on provider documentation, without account wal
 5. Review image-upload consent, save and select it as your OCR engine.
 
 [Official setup and billing guide](https://docs.cloud.google.com/vision/docs/setup) · [API key management](https://docs.cloud.google.com/docs/authentication/api-keys)
+
+## Microsoft Azure AI Vision setup
+
+<a id="azure"></a>
+
+1. Sign in to the [Azure portal](https://portal.azure.com/) and create an **Azure AI Vision** (Computer Vision) resource. The [create page](https://portal.azure.com/#create/Microsoft.CognitiveServicesComputerVision) opens it directly.
+2. Open the resource's **Keys and Endpoint** page. Copy one key and note the **region**, for example `eastus`.
+3. In Cadenza's OCR settings, configure **Microsoft Azure**, paste the key into **API Key** and the region into the region field. The resource's address from the portal also works, as long as it is `https` on a Microsoft Azure host.
+4. Review image-upload consent, save and select Azure.
+
+Lines are returned with their positions, so the text can be selected on the screenshot. A Speech-only resource does not read pictures; use an AI Vision resource here. [Official Read documentation](https://learn.microsoft.com/azure/ai-services/computer-vision/overview-ocr)
+
+## Mistral OCR setup
+
+<a id="mistral"></a>
+
+1. Create an account at [Mistral](https://console.mistral.ai/). Mistral OCR is a paid API; check its pricing in the console first.
+2. Open [API keys](https://console.mistral.ai/api-keys) and create a key.
+3. In Cadenza's OCR settings, configure **Mistral OCR** and paste the key into **API Key**. The same key is used by My AI models for Mistral, so you enter it once.
+4. Review image-upload consent, save and select Mistral. The answer is Markdown, and pictures inside the page are removed.
+
+[Official OCR documentation](https://docs.mistral.ai/capabilities/document/)
 
 ## Tencent Cloud OCR
 
@@ -48,6 +70,6 @@ These are text instructions based on provider documentation, without account wal
 
 The OCR **Test connection** button sends a generated test image containing `OCR TEST 123`, not a screenshot of your desktop. It still contacts the selected provider, requires image-upload consent and can consume its quota. Speech's connection check has different behavior and does not send a recording.
 
-After saving, test with a non-sensitive screenshot. OCR uploads the selected image to the selected cloud provider only after consent; it does not upload audio. Speech and OCR credentials and consent are configured separately, even for the same company. Local fallback is configured separately and does not authorize another cloud service.
+After saving, test with a non-sensitive screenshot. OCR uploads the selected image to the selected cloud provider only after consent; it does not upload audio. For the same company, a key is entered once and shared between speech and text recognition (Tencent Cloud, Baidu, Google and Azure); consent is still given separately for speech and for OCR. Local fallback is configured separately and does not authorize another cloud service.
 
-Keep keys out of screenshots, feedback and public documents. For an English-language international setup, Google Cloud Vision is the currently integrated cloud OCR option with an English console; local Apple Vision and PP-OCR avoid cloud registration entirely.
+Keep keys out of screenshots, feedback and public documents. For an English-language international setup, Google Cloud Vision, Microsoft Azure AI Vision and Mistral OCR all have English consoles; local Apple Vision and PP-OCR avoid cloud registration entirely.

@@ -22,6 +22,7 @@ const release = await latestRelease();
 				<a class="btn primary" href={localized(t.lang, '/download/')}><Icon name="download" />{h.download}</a>
 				<a class="btn line" href={REPO} rel="noopener"><Icon name="code" />{h.github}</a>
 			</div>
+			<a class="whatsnew" href={localized(t.lang, '/changelog/')}><span class="tag">{t.lang === 'zh' ? '新' : 'New'}</span>{h.whatsNew}<Icon name="arrow" /></a>
 			<p class="meta">{[...(release ? [`v${release.version}`] : []), ...h.meta].map((m, i) => <>{i > 0 && <span class="sep">/</span>}{m}</>)}</p>
 		</div>
 		{/* Self-hosted, no third-party player. It plays muted and looping once the page is visible; with reduced motion or

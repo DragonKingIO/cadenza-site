@@ -6,6 +6,7 @@ export interface Release {
 	published: string;
 	pageUrl: string;
 	notes: string[];
+	dmg?: { name: string; url: string; size: number };
 	zip?: { name: string; url: string; size: number };
 	checksumsUrl?: string;
 }
@@ -24,6 +25,7 @@ export async function latestRelease(): Promise<Release | null> {
 		const pageUrl = String(data.html_url ?? '');
 		if (!/^https:\/\/github\.com\//.test(pageUrl)) return null;
 		const assets: any[] = Array.isArray(data.assets) ? data.assets : [];
+		const dmg = assets.find((a) => /macos.*\.dmg$/i.test(a?.name ?? ''));
 		const zip = assets.find((a) => /macos.*\.zip$/i.test(a?.name ?? ''));
 		const checksums = assets.find((a) => a?.name === 'SHA256SUMS.txt');
 		const notes = String(data.body ?? '')
@@ -37,6 +39,7 @@ export async function latestRelease(): Promise<Release | null> {
 			published: String(data.published_at ?? '').slice(0, 10),
 			pageUrl,
 			notes,
+			dmg: dmg && /^https:\/\/github\.com\//.test(dmg.browser_download_url) ? { name: dmg.name, url: dmg.browser_download_url, size: Number(dmg.size) || 0 } : undefined,
 			zip: zip && /^https:\/\/github\.com\//.test(zip.browser_download_url) ? { name: zip.name, url: zip.browser_download_url, size: Number(zip.size) || 0 } : undefined,
 			checksumsUrl: checksums?.browser_download_url,
 		};

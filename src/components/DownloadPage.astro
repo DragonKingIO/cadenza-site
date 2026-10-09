@@ -9,7 +9,8 @@ interface Props { t: Content }
 const { t } = Astro.props;
 const d = t.download;
 const release = await latestRelease();
-const mb = release?.zip ? (release.zip.size / 1048576).toFixed(1) : null;
+const primary = release?.dmg ?? release?.zip;
+const mb = primary ? (primary.size / 1048576).toFixed(1) : null;
 const step1 = release ? d.step1Release : d.step1Source;
 ---
 
@@ -28,10 +29,11 @@ const step1 = release ? d.step1Release : d.step1Source;
 					<div class="ver">{release.version}</div>
 					<p class="meta">{d.released} {release.published}{mb ? ` · ${mb} ${d.sizeUnit}` : ''}</p>
 					<div class="actions">
-						<a class="btn primary" href={release.zip ? release.zip.url : release.pageUrl} rel="noopener"><Icon name="download" />{d.getBtn}</a>
+						<a class="btn primary" href={primary ? primary.url : release.pageUrl} rel="noopener"><Icon name="download" />{d.getBtn}</a>
 					</div>
 					<div class="links2">
 						<a href={release.pageUrl} rel="noopener">{d.notesLink}</a>
+						{release.zip && release.dmg && <a href={release.zip.url} rel="noopener">{d.zipLink}</a>}
 						{release.checksumsUrl && <a href={release.checksumsUrl} rel="noopener">{d.checksumLink}</a>}
 					</div>
 				</>

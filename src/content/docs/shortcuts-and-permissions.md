@@ -29,6 +29,8 @@ when you press another key together with it, but the recording has already start
 If Option gets in your way, record a different shortcut on the Shortcut page: a key together with at least two modifiers
 (including Control or Command), or a function key.
 
+If a combination is refused, Cadenza says why and the Shortcut page suggests a few combinations that work. Command with Shift and a key (such as ⌘⇧A) works. Editing commands such as ⌘C, ⌘V and ⌘Z are refused, because every app uses them. Control with Option is refused only while VoiceOver is on, since that pair is VoiceOver's own.
+
 ## Permissions
 
 | Permission | Why Cadenza needs it |

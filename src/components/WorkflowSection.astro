@@ -1,12 +1,12 @@
 ---
 import Icon from './Icon.astro';
 import { workflow } from '../i18n/workflow';
+import { href, localized } from '../site';
 import type { Content } from '../i18n/en';
 
 interface Props { t: Content }
 const { t } = Astro.props;
 const copy = workflow[t.lang];
-const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.icon));
 ---
 
 <section class="workflow wrap" aria-labelledby="workflow-title" id="workflow">
@@ -20,6 +20,8 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
       <span class="story-icon"><Icon name="mic" /></span>
       <h3>{copy.typingTitle}</h3>
       <p>{copy.typingText}</p>
+      <dl class="story-details">{copy.typingDetails.map(item => <div><dt>{item.title}</dt><dd>{item.text}</dd></div>)}</dl>
+      <a class="story-link" href={localized(t.lang, '/shortcuts-and-permissions/')}>{copy.typingLink}<Icon name="arrow" /></a>
     </div>
     <div class="cleanup-illustration">
       <div>
@@ -39,6 +41,8 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
       <span class="story-icon"><Icon name="globe" /></span>
       <h3>{copy.translationTitle}</h3>
       <p>{copy.translationText}</p>
+      <dl class="story-details">{copy.translationDetails.map(item => <div><dt>{item.title}</dt><dd>{item.text}</dd></div>)}</dl>
+      <a class="story-link" href={localized(t.lang, '/getting-started/')}>{copy.translationLink}<Icon name="arrow" /></a>
     </div>
     <div class="translation-illustration">
       <p class="translation-source">{copy.translationInput}</p>
@@ -53,11 +57,18 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
       <span class="story-icon"><Icon name="scan" /></span>
       <h3>{copy.toolsTitle}</h3>
       <p>{copy.toolsText}</p>
+      <dl class="story-details">{copy.toolsDetails.map(item => <div><dt>{item.title}</dt><dd>{item.text}</dd></div>)}</dl>
+      <a class="story-link" href={localized(t.lang, '/ocr-cloud-credentials/')}>{copy.toolsLink}<Icon name="arrow" /></a>
     </div>
-    <div class="tool-illustration">
-      {tools.map(f => <div><Icon name={f.icon} /><h4>{f.title}</h4></div>)}
+    <div class="ocr-illustration">
+      <div class="ocr-paper"><span class="ocr-document-title">{copy.ocrTitle}</span><div class="ocr-selection">{copy.ocrLines.map(line => <p>{line}</p>)}</div><span class="ocr-document-line"></span><span class="ocr-document-line short"></span></div>
+      <span class="example-label">{copy.ocrCaption}</span>
     </div>
   </article>
+  <aside class="hardware-note">
+    <span class="hardware-icon"><Icon name="plug" /></span>
+    <div><h3>{copy.hardwareTitle}</h3><p>{copy.hardwareText}</p><a class="story-link" href={href('/developers/local-api/')}>{copy.hardwareLink}<Icon name="arrow" /></a></div>
+  </aside>
 </section>
 
 <style>
@@ -82,7 +93,13 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
   .story-icon :global(svg) { width: 26px; height: 26px; }
   h3 { margin: 0 0 14px; font-size: clamp(22px, 2.5vw, 27px); font-weight: 600; line-height: 1.4; letter-spacing: -0.02em; text-wrap: balance; }
   .story-copy p { margin: 0; font-size: 15px; line-height: 1.9; color: var(--muted); max-width: 31em; }
-  .cleanup-illustration, .tool-illustration { padding: 30px; border-radius: 22px; background: var(--bg-2); }
+  .story-details { margin: 20px 0; display: grid; gap: 14px; }
+  .story-details dt { font-size: 13px; color: var(--text); font-weight: 600; margin-bottom: 3px; }
+  .story-details dd { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+  .story-link { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 550; color: var(--primary); text-decoration: none; }
+  .story-link:hover { text-decoration: underline; }
+  .story-link :global(svg) { width: 14px; height: 14px; }
+  .cleanup-illustration, .ocr-illustration { padding: 30px; border-radius: 22px; background: var(--bg-2); }
   .cleanup-illustration > div { padding: 16px 20px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
   .example-label { font-size: 12px; color: var(--muted); }
   .cleanup-illustration p { margin: 9px 0 0; font-size: 16px; line-height: 1.8; }
@@ -95,10 +112,16 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
   .translation-source { font-size: 15px; color: var(--muted); margin: 0 0 18px; }
   .translation-illustration > :global(svg) { width: 19px; height: 19px; color: var(--accent); transform: rotate(90deg); }
   .translation-result { font-size: clamp(21px, 2.2vw, 25px); line-height: 1.45; margin: 18px 0 25px; letter-spacing: -0.02em; font-weight: 500; }
-  .tool-illustration { display: grid; gap: 12px; }
-  .tool-illustration > div { display: flex; align-items: center; gap: 15px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
-  .tool-illustration :global(svg) { width: 21px; height: 21px; color: var(--accent); flex: none; }
-  h4 { margin: 0; font-size: 14px; font-weight: 500; }
+  .ocr-paper { padding: 25px; margin-bottom: 15px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+  .ocr-document-title { display: block; margin-bottom: 20px; font-weight: 600; font-size: 16px; }
+  .ocr-selection { padding: 13px 15px; border: 1px solid var(--tint-line); border-radius: 6px; background: var(--tint); }
+  .ocr-selection p { margin: 0; color: var(--primary); font-size: 15px; line-height: 1.9; }
+  .ocr-document-line { display: block; height: 5px; background: var(--line); width: 80%; margin-top: 20px; border-radius: 4px; }
+  .ocr-document-line.short { width: 55%; margin-top: 10px; }
+  .hardware-note { display: flex; gap: 20px; padding: 26px 30px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .hardware-icon :global(svg) { width: 25px; height: 25px; color: var(--accent); }
+  .hardware-note h3 { font-size: 17px; margin-bottom: 7px; }
+  .hardware-note p { margin: 0 0 12px; font-size: 14px; line-height: 1.8; color: var(--muted); max-width: 54em; }
   @media (prefers-color-scheme: dark) { .translation-illustration { background: #25232f; } }
   @media (max-width: 820px) {
     .workflow { padding-top: 76px; }
@@ -107,7 +130,8 @@ const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.i
     .reverse .story-copy { order: 0; }
   }
   @media (max-width: 540px) {
-    .cleanup-illustration, .translation-illustration, .tool-illustration { padding: 22px; border-radius: 18px; }
+    .cleanup-illustration, .translation-illustration, .ocr-illustration { padding: 22px; border-radius: 18px; }
     .cleanup-illustration > div { padding: 14px 16px; }
+    .hardware-note { padding: 22px; gap: 14px; }
   }
 </style>

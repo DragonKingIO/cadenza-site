@@ -1,12 +1,13 @@
-// Sidebar navigation stays in this tab; other navigation opens a separate tab.
+// Keep site navigation, language changes, and sidebar links in this tab.
+// Open other external website links separately.
 export const newWindowLinksScript = `(function(){
 function prepare(link){
  if(link.closest('#starlight__sidebar')){link.removeAttribute('target');return;}
  var href=link.getAttribute('href');
- if(!href || href.charAt(0)==='#')return;
+ if(!href)return;
  var url;try{url=new URL(href,location.href)}catch(e){return}
  if(url.protocol!=='http:' && url.protocol!=='https:')return;
- if(url.origin===location.origin && url.pathname===location.pathname && url.search===location.search && url.hash)return;
+ if(url.origin===location.origin){link.removeAttribute('target');return;}
  link.setAttribute('target','_blank');
  var rel=new Set((link.getAttribute('rel')||'').split(/\\s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.setAttribute('rel',Array.from(rel).join(' '));
 }

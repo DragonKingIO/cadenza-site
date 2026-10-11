@@ -53,6 +53,7 @@ export default defineConfig({
 						{ slug: 'ocr-cloud-credentials', label: 'Cloud OCR setup', translations: { 'zh-CN': '云端 OCR 识别配置' } },
 						{ slug: 'compare-models', label: 'Compare models with your voice', translations: { 'zh-CN': '用我的声音比较模型' } },
 						{ slug: 'shortcuts-and-permissions', label: 'Shortcuts and permissions', translations: { 'zh-CN': '快捷键与权限' } },
+						{ slug: 'hardware', label: 'Hardware and buying guide', translations: { 'zh-CN': '硬件支持与选购' } },
 						{ slug: 'troubleshooting', label: 'Troubleshooting', translations: { 'zh-CN': '常见问题' } },
 					],
 				},

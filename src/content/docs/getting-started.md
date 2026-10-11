@@ -11,6 +11,8 @@ Cadenza turns speech into text where your cursor is. Hold a shortcut, speak, rel
 - About 200 MB of free space for the recommended local model (the app downloads it when you ask).
 - A microphone.
 
+Choosing a microphone or building a voice button? See the [hardware and buying guide](../hardware/).
+
 ## 1. Install
 
 [Download the disk image](../download/) from GitHub Releases, open it and drag Cadenza to Applications. The app is not notarized, so macOS blocks the first launch:

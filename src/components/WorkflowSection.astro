@@ -1,0 +1,113 @@
+---
+import Icon from './Icon.astro';
+import { workflow } from '../i18n/workflow';
+import type { Content } from '../i18n/en';
+
+interface Props { t: Content }
+const { t } = Astro.props;
+const copy = workflow[t.lang];
+const tools = t.home.features.filter(f => ['scan', 'plug', 'waves'].includes(f.icon));
+---
+
+<section class="workflow wrap" aria-labelledby="workflow-title" id="workflow">
+  <header class="section-intro">
+    <p class="kicker">{copy.kicker}</p>
+    <h2 class="h2" id="workflow-title">{copy.title}</h2>
+  </header>
+
+  <article class="feature-story">
+    <div class="story-copy">
+      <span class="story-icon"><Icon name="mic" /></span>
+      <h3>{copy.typingTitle}</h3>
+      <p>{copy.typingText}</p>
+    </div>
+    <div class="cleanup-illustration">
+      <div>
+        <span class="example-label">{copy.original}</span>
+        <p>{copy.raw}</p>
+      </div>
+      <span class="flow-arrow"><Icon name="arrow" /></span>
+      <div class="cleaned">
+        <span class="example-label">{copy.cleaned}</span>
+        <p>{copy.clean}<span class="caret" aria-hidden="true"></span></p>
+      </div>
+    </div>
+  </article>
+
+  <article class="feature-story reverse">
+    <div class="story-copy">
+      <span class="story-icon"><Icon name="globe" /></span>
+      <h3>{copy.translationTitle}</h3>
+      <p>{copy.translationText}</p>
+    </div>
+    <div class="translation-illustration">
+      <p class="translation-source">{copy.translationInput}</p>
+      <Icon name="arrow" />
+      <p class="translation-result">{copy.translationOutput}</p>
+      <span class="example-label">{copy.translationCaption}</span>
+    </div>
+  </article>
+
+  <article class="feature-story">
+    <div class="story-copy">
+      <span class="story-icon"><Icon name="scan" /></span>
+      <h3>{copy.toolsTitle}</h3>
+      <p>{copy.toolsText}</p>
+    </div>
+    <div class="tool-illustration">
+      {tools.map(f => <div><Icon name={f.icon} /><h4>{f.title}</h4></div>)}
+    </div>
+  </article>
+</section>
+
+<style>
+  .workflow {
+    padding-top: 104px;
+    scroll-margin-top: 90px;
+  }
+  .section-intro { margin-bottom: 52px; text-align: center; }
+  .section-intro .kicker { margin-bottom: 14px; }
+  .section-intro h2 { text-wrap: balance; }
+  .feature-story {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 64px;
+    align-items: center;
+    margin-bottom: 64px;
+  }
+  .feature-story:last-child { margin-bottom: 0; }
+  .feature-story.reverse { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .reverse .story-copy { order: 2; }
+  .story-icon { display: block; color: var(--accent); margin-bottom: 16px; }
+  .story-icon :global(svg) { width: 26px; height: 26px; }
+  h3 { margin: 0 0 14px; font-size: clamp(22px, 2.5vw, 27px); font-weight: 600; line-height: 1.4; letter-spacing: -0.02em; text-wrap: balance; }
+  .story-copy p { margin: 0; font-size: 15px; line-height: 1.9; color: var(--muted); max-width: 31em; }
+  .cleanup-illustration, .tool-illustration { padding: 30px; border-radius: 22px; background: var(--bg-2); }
+  .cleanup-illustration > div { padding: 16px 20px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+  .example-label { font-size: 12px; color: var(--muted); }
+  .cleanup-illustration p { margin: 9px 0 0; font-size: 16px; line-height: 1.8; }
+  .cleanup-illustration .cleaned { border-color: var(--tint-line); }
+  .cleaned p { color: var(--primary); }
+  .flow-arrow { display: block; text-align: center; padding: 7px; color: var(--muted); }
+  .flow-arrow :global(svg) { width: 16px; height: 16px; transform: rotate(90deg); }
+  .caret { display: inline-block; height: 1.1em; width: 2px; margin-left: 3px; background: var(--accent); vertical-align: -2px; }
+  .translation-illustration { padding: 36px 32px; border-radius: 22px; background: #f1eff6; }
+  .translation-source { font-size: 15px; color: var(--muted); margin: 0 0 18px; }
+  .translation-illustration > :global(svg) { width: 19px; height: 19px; color: var(--accent); transform: rotate(90deg); }
+  .translation-result { font-size: clamp(21px, 2.2vw, 25px); line-height: 1.45; margin: 18px 0 25px; letter-spacing: -0.02em; font-weight: 500; }
+  .tool-illustration { display: grid; gap: 12px; }
+  .tool-illustration > div { display: flex; align-items: center; gap: 15px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+  .tool-illustration :global(svg) { width: 21px; height: 21px; color: var(--accent); flex: none; }
+  h4 { margin: 0; font-size: 14px; font-weight: 500; }
+  @media (prefers-color-scheme: dark) { .translation-illustration { background: #25232f; } }
+  @media (max-width: 820px) {
+    .workflow { padding-top: 76px; }
+    .section-intro { margin-bottom: 36px; }
+    .feature-story, .feature-story.reverse { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 48px; }
+    .reverse .story-copy { order: 0; }
+  }
+  @media (max-width: 540px) {
+    .cleanup-illustration, .translation-illustration, .tool-illustration { padding: 22px; border-radius: 18px; }
+    .cleanup-illustration > div { padding: 14px 16px; }
+  }
+</style>

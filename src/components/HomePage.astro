@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from './Icon.astro';
+import WorkflowSection from './WorkflowSection.astro';
 import { href, localized, REPO } from '../site';
 import { latestRelease } from '../lib/release';
 import type { Content } from '../i18n/en';
@@ -38,19 +39,7 @@ const release = await latestRelease();
 		</figure>
 	</section>
 
-	<section class="s wrap">
-		<p class="kicker">{h.featuresKicker}</p>
-		<h2 class="h2">{h.featuresTitle}</h2>
-		<div class="feats">
-			{h.features.map((f) => (
-				<div class="feat">
-					<span class="glyph"><Icon name={f.icon} /></span>
-					<h3>{f.title}{f.tag && <span class="tag">{f.tag}</span>}</h3>
-					<p>{f.text}</p>
-				</div>
-			))}
-		</div>
-	</section>
+	<WorkflowSection t={t} />
 
 	<section class="s wrap">
 		<p class="kicker">{h.enginesKicker}</p>

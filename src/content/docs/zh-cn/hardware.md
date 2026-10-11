@@ -1,0 +1,76 @@
+---
+title: 硬件支持与选购
+description: 挑选麦克风、遥控器和 DIY 语音开发板，了解所需配置与随言目前的实测范围。
+---
+
+**日常语音输入，先用 Mac 已经能识别的麦克风。** 如果想做一个独立的语音按键、吊坠或录音设备，再考虑 ESP32 开发板；使用随言本身不需要购买开发板。
+
+:::note[兼容性状态 · 2026 年 10 月 11 日]
+随言已经有控制麦克风、提交外部音频的本地接口。下面的开发板、遥控器和第三方桥接工具属于**开发候选方案，不是经过随言认证的兼容设备清单**。硬件规格已参考厂商或项目文档核实，但与随言的实体 USB、蓝牙、Wi-Fi 联动尚未实测。
+:::
+
+## 按用途选择
+
+| 你想做什么 | 可以从什么开始 | 需要准备什么 |
+|---|---|---|
+| 在桌前语音输入 | Mac 自带麦克风，或兼容 macOS 的 USB 麦克风、耳麦 | 选择输入设备，先试说一句，再决定是否购买新麦克风 |
+| 用无线按键录音 | 小米蓝牙遥控器 2 Pro 加第三方桥接工具 | 配置虚拟或 USB 麦克风，以及对应的按下、松开动作；仍需验证与随言的联动 |
+| DIY 吊坠或语音按键 | 带麦克风的 ESP32-S3 开发板 | 编写或改造固件和 Mac 桥接程序，或者实现 USB 麦克风＋键盘固件 |
+| 按设备上的键，使用 Mac 麦克风 | 连接到 Mac 程序的控制器 | 通过[本地接口](../developers/local-api/)控制开始、结束和取消录音 |
+
+普通麦克风优先看 macOS 兼容性、退换政策和你的说话距离。在常用房间里分别试正常音量与轻声。开发板参数里的“带麦克风”并不能证明识别准确度。
+
+## 可以考虑的开发板
+
+希望少接一块麦克风时，**XIAO ESP32S3 Sense 可以作为起步候选**；希望在面包板上做较大的原型，可以考虑 ESP32-S3-DevKitC-1 加独立麦克风。这个建议依据硬件结构和文档，并非麦克风效果横评。
+
+| 候选设备 | 适合的用途 | 厂商与资料 |
+|---|---|---|
+| Seeed XIAO ESP32S3 Sense | 小型 ESP32-S3，Sense 扩展板带数字麦克风；购买时确认包含完整 Sense 套件 | [官方购买页](https://www.seeedstudio.com/XIAO-ESP32S3-Sense-p-5639.html) · [开发板说明](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/) |
+| Seeed XIAO ESP32S3 | 不含 Sense 麦克风的基础款，适合自己加麦克风与按键 | [官方购买页](https://www.seeedstudio.com/XIAO-ESP32S3-p-5627.html) · [开发板说明](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/) |
+| 乐鑫 ESP32-S3-DevKitC-1 | 适合面包板和独立麦克风原型；确认实际板卡版本与模组型号 | [官方开发板说明](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/user_guide_v1.1.html) |
+| M5Stack ATOM Echo / Atom Voice（ESP32-PICO-D4） | 自带麦克风、扬声器和按键；这一款旧 ESP32 适合 Mac 桥接方案，不是原生 USB 麦克风固件方案 | [官方购买页与规格](https://shop.m5stack.com/products/atom-echo-smart-speaker-dev-kit) |
+| M5Stack AtomS3R AI Chatbot Kit | ESP32-S3 控制器加音频底座，也需要扬声器时可以考虑；确认套件内容和专用固件 | [官方购买页与规格](https://shop.m5stack.com/products/atoms3r-ai-chatbot-kit-8mb-psram) |
+
+### 国内与海外怎么买
+
+上表提供厂商购买页或文档。海外用户先确认所在国家是否配送、税费、库存和套件内容。国内用户可在[京东](https://www.jd.com/)或[淘宝](https://www.taobao.com/)搜索上表的完整型号，再核对卖家和配件；名称相近的 S3、Sense 变体不一定是同一款设备。
+
+价格会变动，完整制作成本以实时商品页为准。作为 **2026 年 10 月 11 日**的参考快照，M5Stack 官方列出的 Atom Voice 为 **13.50 美元**、AtomS3R AI Chatbot Kit 为 **21.50 美元**，未计运费和适用税费。这只是板卡或套件价格，不是整套随言语音设备的成本。此页不使用推广返佣或追踪链接。
+
+## 裸板需要什么麦克风
+
+开发板没有麦克风时，再考虑单独购买。通用 **INMP441 I2S 模块**是 DIY 候选之一，应核对实际卖家的模块资料。需要有完整文档的替代选择，可参考 [Adafruit I2S MEMS 麦克风教程](https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout)，里面介绍了它的 SPH0645LM4H 和 ICS-43434 模块。接线与采样格式应按具体器件确定，不能混用不同型号的说明。
+
+I2S 模块需要匹配供电与逻辑电压、位时钟、声道时钟、数据和声道选择。**不存在所有 ESP32-S3 都通用的接线表。** [乐鑫说明 GPIO26–32 通常用于 Flash/PSRAM](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/gpio.html)，因此不应把 GPIO32 写成通用的麦克风时钟脚。做 USB 方案还要保留实际板卡原生 USB 所使用的引脚。
+
+## 自制设备怎样连接随言
+
+### Mac 桥接程序与本地接口
+
+设备通过 USB、蓝牙、串口或 Wi-Fi 把音频送到 **Mac 上的桥接程序**，再由它转发给随言的 `127.0.0.1` 接口。**随言目前没有供其他设备直接连接的局域网接口。** Wi-Fi 接收、设备固件和配对需要桥接程序作者实现；示例客户端不是完整的 ESP32 固件或网络接收器。
+
+外部音频接口 `/v1/audio` 要求 **16 kHz、单声道、小端、有符号 16 位 PCM**，并需要获授权的令牌。压缩的 IMA-ADPCM 必须先解码。要写入其他应用，还需要带 `insert` 权限的设备令牌、开启全局插入开关，并在会话中请求插入；主令牌不能插入文字。
+
+识别引擎可以是可用的本地模型，或已配置并同意上传的云端服务；Apple 自带识别不能通过此接口接收外部提交的音频。详见[硬件接入](../developers/hardware-integration/)与[本地接口](../developers/local-api/)（技术说明为英文），以及[示例客户端](https://github.com/DragonKingIO/Cadenza-voice/tree/main/cadenza/examples/local-api)。
+
+### USB 麦克风与键盘
+
+ESP32-S3 可以用于实现 USB 音频＋HID 键盘固件，但**有 USB-C 插口不等于开发板已经是麦克风**。需要对应固件和板卡原生 USB 连接；只有 USB 转串口的插口不能提供 USB 音频。
+
+在随言里选择生成的麦克风，把设备按键配置为对应快捷键。“按住说话”必须同时发送按下和松开事件。日常使用前要测试取消与断开重连。这条路使用普通麦克风采集，不走外部音频接口；前面的 PCM 格式限制仅针对 API 提交。
+
+## 小米遥控器与第三方桥接
+
+[SayAll（无线麦）](https://sayall.app/)的官方说明支持小米蓝牙遥控器 2 和 2 Pro，提供虚拟麦克风，并把按键映射给另行安装的语音输入工具。它是第三方项目，不是随言的一部分。按其教程安装当前 Mac 版、配对支持的遥控器、选择它提供的麦克风并设置对应快捷键。**这一组合尚未与随言联动实测**，安装和授权条款请参考 SayAll 自己的说明。
+
+开发者还可以参考 [MI-RC003-ESP32-Bridge](https://github.com/ncmro7/MI-RC003-ESP32-Bridge)：项目描述了 ESP32-S3 的 USB 音频与 HID 桥接，并将遥控器的 IMA-ADPCM 解码为 PCM。文档里的默认语音快捷键是 **右 Alt＋逗号**，需要重新映射，不能假定它已经发送随言默认的左 Option。按项目说明选择板卡和烧录固件；这也是待验证的随言接入候选。
+
+## 日常使用前先试一遍
+
+1. 确认 macOS 能看到麦克风，或桥接程序能够通过本地接口提交音频。
+2. 在常用环境试短句、长句、正常音量、轻声和中途停顿。
+3. 检查按下、松开、取消和断开重连，确认文字进入预期输入框。
+4. 核对设备固件与桥接程序自身的网络行为。随言的本地模型选项无法控制第三方固件自己的云端请求；出厂 AI 助手固件也不是随言桥接固件。
+
+连接成功不等于识别准确度已经达标。音频通路正常后，再[用自己的声音比较模型](../compare-models/)；按键不能触发时，参考[快捷键与权限](../shortcuts-and-permissions/)。

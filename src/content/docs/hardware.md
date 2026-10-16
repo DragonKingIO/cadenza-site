@@ -1,12 +1,12 @@
 ---
 title: Hardware and buying guide
-description: Choose a microphone or a DIY voice controller, understand the setup needed, and distinguish documented capabilities from tested Cadenza compatibility.
+description: Use the Xiaomi Bluetooth voice remote directly, choose a microphone or a DIY voice controller, and tell tested compatibility from documented capabilities.
 ---
 
 **For everyday dictation, start with a microphone your Mac already recognizes.** An ESP32 board is useful when you want to build a separate voice button, pendant or recorder; it is not required to use Cadenza.
 
-:::note[Compatibility status — October 11, 2026]
-Cadenza has a local interface for microphone control and external audio submission. The boards, remote and third-party bridges below are **development candidates, not a certified compatibility list**. Their hardware specifications have been checked against manufacturer or project documentation; physical USB/Bluetooth/Wi-Fi integration with Cadenza has not been verified.
+:::note[Compatibility status]
+**Xiaomi Bluetooth Voice Remote 2 and 2 Pro are supported directly** (Settings → Hardware). The support was measured on one Remote 2; the Pro is recognized by its product name and has not been measured on a physical device. The boards and third-party bridges below are **development candidates, not a certified compatibility list**: their specifications have been checked against manufacturer or project documentation, but physical USB/Bluetooth/Wi-Fi integration with Cadenza has not been verified.
 :::
 
 ## Choose your setup
@@ -14,7 +14,7 @@ Cadenza has a local interface for microphone control and external audio submissi
 | You want to… | Start with | Setup needed |
 |---|---|---|
 | Dictate at your desk | Your Mac's microphone, or a macOS-compatible USB microphone/headset | Select the input device and try a sentence before buying another microphone. |
-| Record with a wireless button | Xiaomi Bluetooth Remote 2 Pro plus a third-party bridge | Configure a virtual/USB microphone and matching press/release shortcut behavior. Cadenza integration still needs testing. |
+| Record with a wireless button | Xiaomi Bluetooth Voice Remote 2 or 2 Pro | Pair it in Settings → Hardware, hold the voice key to dictate. No bridge program is needed; see [the remote](#xiaomi-bluetooth-voice-remote). |
 | Build a pendant or custom voice button | A microphone-equipped ESP32-S3 board | Write or adapt firmware and a Mac bridge, or USB microphone + keyboard firmware. |
 | Use a button with the Mac's microphone | A controller connected to a program on the Mac | Use the [local API](../developers/local-api/) to start, stop or cancel recording. |
 
@@ -60,9 +60,20 @@ An ESP32-S3 can be used for USB audio + HID keyboard firmware, but an ordinary b
 
 Select the resulting microphone in Cadenza and configure the hardware key to match its shortcut. For hold-to-talk, the firmware must send both press and release. Test cancellation and reconnect behavior before everyday use. This path uses normal microphone capture, not the external-audio API; the API's PCM format requirement is specific to API submissions.
 
-## Xiaomi remote and third-party bridges
+## Xiaomi Bluetooth voice remote
 
-[SayAll](https://sayall.app/) documents support for Xiaomi Bluetooth Remote 2 and 2 Pro, provides a virtual microphone and lets users map buttons to a separate dictation application. It is a third-party project, not a Cadenza component. Install its current Mac version, pair the supported remote, choose its microphone and configure a matching shortcut. **This combination has not been tested with Cadenza.** Consult SayAll's own setup and licensing information.
+**Cadenza connects to the Xiaomi Bluetooth Voice Remote 2 and 2 Pro itself.** Open Settings → Hardware, wake the remote, and follow the pairing card. Hold the voice key and speak; release to insert, or switch the key to press-to-start and press-to-stop. The remote's microphone audio goes to the same recognizer as your Mac's microphone, so a local model keeps it on your Mac.
+
+- **Keys.** The other keys can be remapped to arrows, Return, Esc, copy, paste, undo, system volume, area screenshot, screenshot OCR or your own shortcut. Only the voice key starts dictation. *Key test* shows which key arrives without running anything.
+- **No stray typing.** The remote also looks like a keyboard to macOS. Cadenza drops the key events that the remote itself is holding so they do not type into the front window; your keyboard is not touched. This needs the Accessibility permission.
+- **Permissions.** Bluetooth to connect the remote, Input Monitoring to read its keys, and Accessibility for the point above. Nothing leaves the Mac for the connection itself; see the [privacy notice](../privacy/notice/).
+- **What was tested.** One Remote 2 (USB vendor id 0x2717, product id 0x32B8). The Pro is matched by Xiaomi's vendor id and shown by its product name; it has not been measured on a physical device, so tell us if a Pro does not connect.
+
+How it works is described in [hardware integration](../developers/hardware-integration/).
+
+## Third-party bridges
+
+If you cannot use the built-in support, [SayAll](https://sayall.app/) documents support for Xiaomi Bluetooth Remote 2 and 2 Pro, provides a virtual microphone and lets users map buttons to a separate dictation application. It is a third-party project, not a Cadenza component. Install its current Mac version, pair the supported remote, choose its microphone and configure a matching shortcut. **This combination has not been tested with Cadenza.** Consult SayAll's own setup and licensing information.
 
 For developers, [MI-RC003-ESP32-Bridge](https://github.com/ncmro7/MI-RC003-ESP32-Bridge) describes an ESP32-S3 bridge with USB audio and HID. Its firmware decodes the remote's IMA-ADPCM into PCM. Its documented default voice shortcut is **Right Alt + comma**, so it needs remapping rather than assuming it already sends Cadenza's default Left Option. Check its supported board and firmware instructions; this is another unverified Cadenza integration candidate.
 

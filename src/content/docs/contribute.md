@@ -10,6 +10,7 @@ on your own voice and bug reports are real contributions.
 |---|---|
 | Report a bug | The [Bug report form](https://github.com/DragonKingIO/Cadenza-voice/issues/new/choose). Do not attach recordings, transcripts or unredacted logs. |
 | Suggest a feature | The Feature request form. For large changes, discuss first. |
+| Add a word to the vocabulary | The Vocabulary term form, or edit a pack file in [`cadenza/vocab`](https://github.com/DragonKingIO/Cadenza-voice/tree/main/cadenza/vocab). Send words and the spellings you have really seen, never sentences or recordings. |
 | Propose a model or a cloud service | The Model request or Cloud provider forms. |
 | Offer a translation | The Add a language form first: a third language still needs some code work. |
 | Improve the docs | Edit a page and open a pull request. |

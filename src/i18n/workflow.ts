@@ -36,7 +36,7 @@ export const workflow = {
     ocrLines: ['下午三点讨论方案。', '带上你的好点子。'],
     ocrCaption: '图片文字识别 · 演示示例',
     hardwareTitle: '也为自己的程序留一个入口。',
-    hardwareText: '可选的本地接口默认关闭。开启后，本机程序可以提交音频、控制录音并获取文字；硬件接入需要通过本机程序适配。',
+    hardwareText: '小米蓝牙语音遥控器可以在“硬件外设”页直接配对。可选的本地接口默认关闭，开启后本机程序可以提交音频、控制录音并获取文字；其他硬件需要通过本机程序适配。',
     hardwareLink: '本地接口文档（英文）',
   },
   en: {
@@ -75,7 +75,7 @@ export const workflow = {
     ocrLines: ['Discuss the proposal at three.', 'Bring your best ideas.'],
     ocrCaption: 'Image text recognition · Illustrative example',
     hardwareTitle: 'An entry point for your own tools, too.',
-    hardwareText: 'The optional local API is off by default. Enable it to submit audio, control recordings, and receive text from a program on this Mac. Hardware needs an adapter running on the Mac.',
+    hardwareText: 'A Xiaomi Bluetooth voice remote pairs directly on the Hardware page. The optional local API is off by default; enable it to submit audio, control recordings, and receive text from a program on this Mac. Other hardware needs an adapter running on the Mac.',
     hardwareLink: 'Read the local API documentation',
   },
 };

@@ -3,6 +3,13 @@ title: Changelog
 description: What changed in each version.
 ---
 
+## 1.3.0 — early preview
+
+- **Xiaomi Bluetooth voice remote (Remote 2 and 2 Pro).** Settings → Hardware pairs it directly: hold the voice key to dictate, and remap the other keys. Its own keys no longer type into the front window. Measured on one Remote 2; the Pro has not been measured on a physical device.
+- **A larger vocabulary.** About 350 new terms and a new *Apps and software* pack. Transliterated Chinese aliases match other characters of the same sound, and a string of letters that is no English word is corrected when it is one easily confused letter from a single-word term (`gbt` becomes `GPT`).
+- **A Vocabulary term form** for suggesting words and spellings.
+- The menu bar menu groups *Pause*, the remote and *Settings* together.
+
 ## 1.2.0 — early preview
 
 - **Voice translation has its own shortcut and page.** Ordinary dictation no longer translates. If you had a language chosen, set a translate shortcut to keep translating.

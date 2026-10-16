@@ -71,7 +71,7 @@ The fixture suite uses a loopback HTTP server with Range and fault injection, ge
 
 - Two model families are runnable: SenseVoice and NeMo Parakeet TDT (transducer). Real-model acceptance must be reported from the latest run; mock tests alone do not prove either family works. Whisper and streaming (online) models need their own runners.
 - Manual import is a fallback only (shown after a failed download and on the Developer page). Files must match a list entry by SHA-256.
-- Decoding is offline: the live preview re-decodes the last ≤25 s every ~1.5 s; the final text uses VAD-selected speech for short and long recordings, with 200 ms context at the boundaries and inference chunks bounded to 25 s. Silence or unconfirmed speech returns no text. The 15-minute local recording limit automatically ends the recording instead of silently dropping audio.
+- Decoding is offline: display-only previews use the last ≤8 s, with the next preview scheduled 1.5 s after the previous work finishes. Recordings longer than 25 s prepare complete inference chunks while recording. A bounded, memory-only memo reuses results only for identical processed audio and the same recognizer; changed samples are decoded again. Release stops new preview work, and final decoding still uses every captured sample. After VAD confirms speech, recordings ≤25 s keep their complete sentence context. Longer recordings use speech ranges with 800 ms context, merging overlaps and bounding inference calls to 25 s. Normal waveforms are not denoised or boosted; genuinely faint input receives capped gain. Silence or unconfirmed speech returns no text. The 15-minute local recording limit automatically ends the recording instead of silently dropping audio.
 - A loaded model uses roughly 0.5 GB RAM; it is released after 5 idle minutes.
 - Fallback keeps at most 120 s of audio; a longer recording that then fails in the cloud is reported as a cloud failure.
 
@@ -104,6 +104,33 @@ The benchmark below was run with `--accuracy-benchmark --bench-quick` on the sam
 | Paraformer-large int8 | 1.8% | 20.0% | 9 s |
 | SenseVoice (recommended default) | 2.0–2.2% | 24.8% | fast |
 | FireRedASR2 CTC | 2.5% | 33.3% | 52 s |
+
+### Accuracy ranking (shown in the model list)
+
+Synthesized speech is much cleaner than a person, and on it every model looks nearly perfect. The ranking shown in the model list therefore
+comes from real recordings: **15 clips of one person talking casually in Chinese** (fast, half-sentences, filler words), each
+corrected by hand (character error rate after dropping punctuation, lower is better). It is one voice and 15 clips, so small
+differences are noise; the order of the first and the rest is not.
+
+| Model | Errors on casual Chinese | Time per clip |
+|---|---|---|
+| SenseVoice (recommended) | 16.8–17.0% | 0.5 s |
+| Qwen3-ASR 0.6B | 21.1% | 2.3 s |
+| Paraformer-large | 21.4% | 0.4 s |
+| FireRedASR2 | 24.7% | 2.6 s |
+| Parakeet TDT v3 | not usable (European languages only: it writes Chinese speech as English) | 1.0 s |
+
+Cloud services on the same clips (clips of 11 s or more cannot be streamed faster than real time, so they were fed at real time):
+Volcengine 14.7%, iFlytek 16.3%, Tencent 16.2%, Groq Whisper large-v3 21.2% (after asking for Chinese and Simplified characters),
+Deepgram 46%, Alibaba NLS unusable until the paid version is activated. None of them is much better than the local SenseVoice.
+
+English was only measured on synthesized speech (`--accuracy-benchmark --bench-lang=en`, 39 clips, three voices, clean and with noise):
+Qwen3-ASR 0.5%, Paraformer 2.6%, FireRedASR2 4.3%, SenseVoice 5.1% and Parakeet 6.0%. For SenseVoice and Parakeet nearly all of that
+is digits written as digits ("25" against "twenty five"), which the character count treats as an error; without the number sentences
+they are about 1.1% and 1.4%. Treat the English order as a rough guide until someone records real English speech.
+
+AI polishing does not improve this (it does not know what was said): on the same 15 dictations it moved the error from 16.8% to
+19.6%, because it also rewrites ("他" to "它"). It is for punctuation and filler words.
 
 ### Speed and memory (shown in the model list)
 

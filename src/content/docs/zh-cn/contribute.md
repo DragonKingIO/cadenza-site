@@ -9,6 +9,7 @@ description: 欢迎所有人，从这里开始。
 |---|---|
 | 反馈问题 | [问题反馈表单](https://github.com/DragonKingIO/Cadenza-voice/issues/new/choose)。请不要附上录音、识别文字或没处理过的日志。 |
 | 提功能建议 | 功能建议表单；较大的改动请先讨论。 |
+| 补充词库里的词 | 使用“词条提交”表单，或直接编辑 [`cadenza/vocab`](https://github.com/DragonKingIO/Cadenza-voice/tree/main/cadenza/vocab) 里的词库文件。只提交词和你真正见过的写法，不要提交句子或录音。 |
 | 建议某个模型或云端服务 | 模型建议、云端服务适配表单。 |
 | 提供翻译 | 先用“添加语言”表单：加第三种语言目前还需要改一些代码。 |
 | 改进文档 | 编辑一个页面并提交 Pull Request。 |

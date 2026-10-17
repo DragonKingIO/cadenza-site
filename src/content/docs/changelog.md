@@ -3,6 +3,12 @@ title: Changelog
 description: What changed in each version.
 ---
 
+## 1.3.1 — early preview
+
+- **Voice remote: 66 key actions in groups, and three presets** (Voice assistant, Select and edit, Media and system). Move or select text, edit, page, media, volume, brightness, Mission Control, Spotlight, tab and window shortcuts, screenshots and more.
+- Holding an arrow, page or volume key repeats it; the voice key can also *hold to talk and translate*; the power key can be set to *Ignore*.
+- The remote's level bar adapts to its quiet microphone.
+
 ## 1.3.0 — early preview
 
 - **Xiaomi Bluetooth voice remote (Remote 2 and 2 Pro).** Settings → Hardware pairs it directly: hold the voice key to dictate, and remap the other keys. Its own keys no longer type into the front window. Measured on one Remote 2; the Pro has not been measured on a physical device.

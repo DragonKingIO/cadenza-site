@@ -91,7 +91,7 @@ pre{white-space:pre-wrap;word-break:break-all;background:var(--bg);border:1px so
 <script>
 'use strict';
 const RECORDER_VERSION='1.0.0', CONSENT_VERSION='2026-10-18-v1', RATE=16000;
-const CONTACT='{{CONTACT_EMAIL}}', HF_URL='{{HF_DATASET_URL}}';
+const CONTACT='evendstate@gmail.com', HF_URL='{{HF_DATASET_URL}}';
 const SCRIPT=JSON.parse(document.getElementById('script-data').textContent);
 const $=id=>document.getElementById(id);
 
@@ -138,7 +138,7 @@ en:{
  submit:(pid,name)=>[
   'The zip file contains one WAV file per recorded sentence, manifest.json, consent.json and a short README. Your participant ID is '+pid+'.',
   'Option 1 (recommended): email the zip file ('+name+', about 1 MB per 30 sentences) to '+CONTACT+'.',
-  'Option 2 (license A only): upload it as a pull request on the dataset page '+HF_URL+'. Pull request content on a public dataset may be visible to others, so do not use this route for license B.',
+  HF_URL.includes('{{')?null:'Option 2 (license A only): upload it as a pull request on the dataset page '+HF_URL+'. Pull request content on a public dataset may be visible to others, so do not use this route for license B.',
   'To delete your data later, email '+CONTACT+' with your participant ID.'],
  leave:'You have recordings that are not downloaded yet.'
 },
@@ -183,7 +183,7 @@ zh:{
  submit:(pid,name)=>[
   'zip 里有每个已录句子的 WAV 文件、manifest.json、consent.json 和一份简短说明。你的参与编号是 '+pid+'。',
   '方式一（推荐）：把 zip 文件（'+name+'，每 30 句约 1 MB）发邮件到 '+CONTACT+'。',
-  '方式二（仅授权 A）：在数据集页面 '+HF_URL+' 以 pull request 的方式上传。公开数据集上 pull request 的内容可能被其他人看到，所以选 B 的请不要走这条路。',
+  HF_URL.includes('{{')?null:'方式二（仅授权 A）：在数据集页面 '+HF_URL+' 以 pull request 的方式上传。公开数据集上 pull request 的内容可能被其他人看到，所以选 B 的请不要走这条路。',
   '以后想删除数据，发邮件到 '+CONTACT+'，附上你的参与编号。'],
  leave:'你还有没下载的录音。'
 }};
@@ -348,7 +348,7 @@ function buildZip(){
 
 function showFinish(){if(S.capturing)return;stopPlay();$('rec').hidden=true;$('fin').hidden=false;renderFinish();window.scrollTo(0,0)}
 function renderFinish(){const[rc,sk]=counts();$('finSummary').textContent=t().finSummary(rc,sk,sents.length);$('zipBtn').disabled=rc===0;
- const box=$('subText');box.textContent='';t().submit(S.pid,'cadenza-testset-'+S.pid+'.zip').forEach(x=>{const p=document.createElement('p');p.textContent=x;box.appendChild(p)})}
+ const box=$('subText');box.textContent='';t().submit(S.pid,'cadenza-testset-'+S.pid+'.zip').filter(Boolean).forEach(x=>{const p=document.createElement('p');p.textContent=x;box.appendChild(p)})}
 $('backBtn').onclick=()=>{$('fin').hidden=true;$('rec').hidden=false;renderSentence()};
 $('zipBtn').onclick=()=>{
  if(counts()[0]===0){$('zipStatus').textContent=t().noRec;return}

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Voice test recorder</title>
+<style>
+:root{--bg:#fafaf8;--fg:#1c1c1a;--muted:#6b6b66;--card:#fff;--line:#dcdcd6;--accent:#2b5fd9;--accent-fg:#fff;--ok:#2f8f4e;--warn:#c27a00;--bad:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--fg:#ececea;--muted:#9a9a94;--card:#1f1f1d;--line:#34342f;--accent:#6b97ff;--accent-fg:#101010;--ok:#4cc27a;--warn:#e6a23c;--bad:#ef6b5b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+h1{font-size:1.25rem;margin:0}h2{font-size:1.05rem;margin:1.2em 0 .3em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.consent{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px 12px;background:var(--bg)}
+.consent p{margin:.5em 0}
+button,select{font:inherit;color:inherit}
+button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:10px 14px;cursor:pointer;min-height:44px}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button.rec.on{background:var(--bad);border-color:var(--bad);color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+label{display:block;margin:.4em 0}
+.field{display:grid;gap:4px;margin:10px 0}.field select{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--card);min-height:44px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.muted{color:var(--muted);font-size:.9rem}
+.sentence{font-size:1.7rem;line-height:1.5;margin:.4em 0 .6em;word-break:break-word}
+.meter{height:14px;background:var(--bg);border:1px solid var(--line);border-radius:7px;overflow:hidden;position:relative}
+.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .05s linear}
+.meter.quiet i{background:var(--warn)}.meter.clip i{background:var(--bad)}
+.status{min-height:1.5em;margin-top:6px;font-size:.95rem}.status.warn{color:var(--warn)}.status.bad{color:var(--bad)}.status.ok{color:var(--ok)}
+progress{width:100%;height:8px}
+pre{white-space:pre-wrap;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;margin:6px 0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<header><h1 id="title"></h1><button id="langBtn" type="button" aria-label="Language"></button></header>
+<p class="muted" id="subtitle"></p>
+
+<section id="consent" class="card">
+ <h2 id="consentH"></h2>
+ <div class="consent" id="consentText" tabindex="0"></div>
+ <h2 id="licH"></h2>
+ <label><input type="radio" name="lic" value="A"> <span id="licA"></span></label>
+ <label><input type="radio" name="lic" value="B"> <span id="licB"></span></label>
+ <label><input type="checkbox" id="age"> <span id="ageL"></span></label>
+ <h2 id="metaH"></h2>
+ <div class="field"><label for="region" id="regionL"></label><select id="region"></select></div>
+ <div class="field"><label for="mic" id="micL"></label><select id="mic"></select></div>
+ <div class="field"><label for="gender" id="genderL"></label><select id="gender"></select></div>
+ <div class="field"><label for="ageband" id="agebandL"></label><select id="ageband"></select></div>
+ <div class="row"><button id="startBtn" class="primary" type="button" disabled></button></div>
+ <p class="status bad" id="startErr" role="alert"></p>
+</section>
+
+<section id="rec" class="card" hidden>
+ <progress id="prog" value="0" max="1"></progress>
+ <div class="muted" id="progText"></div>
+ <div class="muted" id="sid"></div>
+ <div class="sentence" id="sentence" lang="zh-CN"></div>
+ <div class="meter" id="meter" role="meter" aria-label="Level" aria-valuemin="0" aria-valuemax="100"><i id="meterBar"></i></div>
+ <div class="status" id="recStatus" role="status" aria-live="polite"></div>
+ <div class="row">
+  <button id="recBtn" class="rec primary" type="button"></button>
+  <button id="playBtn" type="button"></button>
+  <button id="skipBtn" type="button"></button>
+ </div>
+ <div class="row">
+  <button id="prevBtn" type="button"></button>
+  <button id="nextBtn" type="button"></button>
+  <button id="finishBtn" type="button"></button>
+ </div>
+ <p class="muted" id="hint"></p>
+</section>
+
+<section id="fin" class="card" hidden>
+ <h2 id="finH"></h2>
+ <p id="finSummary"></p>
+ <div class="row"><button id="zipBtn" class="primary" type="button"></button><button id="backBtn" type="button"></button></div>
+ <p class="status" id="zipStatus" role="status" aria-live="polite"></p>
+ <h2 id="subH"></h2>
+ <div id="subText"></div>
+</section>
+</main>
+
+<script type="application/json" id="script-data">{"version":1,"language":"zh-CN","categories":{"short":"短句(≤6字)","medium":"中句","long":"长句(30-80字)","mixed":"中英夹杂","particles":"语气词与疑问","numbers":"数字和日期"},"sentences":[{"id":"s01","category":"short","reference":"好的。"},{"id":"s02","category":"short","reference":"谢谢。"},{"id":"s03","category":"short","reference":"没问题。"},{"id":"s04","category":"short","reference":"我马上到。"},{"id":"s05","category":"short","reference":"你在哪？"},{"id":"s06","category":"short","reference":"现在几点？"},{"id":"s07","category":"short","reference":"太好了！"},{"id":"s08","category":"short","reference":"稍等一下。"},{"id":"s09","category":"short","reference":"明天见。"},{"id":"s10","category":"short","reference":"可以开始吗？"},{"id":"s11","category":"short","reference":"收到。"},{"id":"s12","category":"short","reference":"我知道了。"},{"id":"s13","category":"short","reference":"不用了。"},{"id":"s14","category":"short","reference":"请再说一遍。"},{"id":"s15","category":"short","reference":"为什么？"},{"id":"s16","category":"short","reference":"马上发给你。"},{"id":"s17","category":"short","reference":"辛苦了。"},{"id":"s18","category":"short","reference":"先这样吧。"},{"id":"s19","category":"short","reference":"真的假的？"},{"id":"s20","category":"short","reference":"今天周五。"},{"id":"m01","category":"medium","reference":"我下午三点要和产品经理开个会。"},{"id":"m02","category":"medium","reference":"麻烦把会议纪要整理好发给大家。"},{"id":"m03","category":"medium","reference":"这个功能下周一之前需要上线。"},{"id":"m04","category":"medium","reference":"我刚才在地铁上收到了一条通知。"},{"id":"m05","category":"medium","reference":"请问你们公司的报销流程是怎样的？"},{"id":"m06","category":"medium","reference":"帮我订一张明天去上海的高铁票。"},{"id":"m07","category":"medium","reference":"周末我打算去公园散步，顺便拍几张照片。"},{"id":"m08","category":"medium","reference":"客户希望我们尽快给出一个报价方案。"},{"id":"m09","category":"medium","reference":"这份文档还需要再检查一遍格式。"},{"id":"m10","category":"medium","reference":"他昨天晚上加班到很晚才回家。"},{"id":"m11","category":"medium","reference":"我们把预算调整一下，再看看。"},{"id":"m12","category":"medium","reference":"电脑最近运行得有点慢，需要重启一下。"},{"id":"m13","category":"medium","reference":"请在周三下班前提交本周的工作总结。"},{"id":"m14","category":"medium","reference":"我觉得这个方案的风险比较大。"},{"id":"m15","category":"medium","reference":"冰箱里还有两个鸡蛋和一些蔬菜。"},{"id":"m16","category":"medium","reference":"会议室已经预订好了，大家准时参加。"},{"id":"m17","category":"medium","reference":"这个问题我们回头再详细讨论。"},{"id":"m18","category":"medium","reference":"下个月公司要组织一次团队聚餐。"},{"id":"m19","category":"medium","reference":"能不能把声音调小一点？"},{"id":"m20","category":"medium","reference":"你今天有没有时间一起吃午饭？"},{"id":"l01","category":"long","reference":"我昨天下午和设计团队开了一个很长的会，主要讨论了新版本首页的改版方案，大家都觉得需要先把流程简化。"},{"id":"l02","category":"long","reference":"如果明天上午的天气不太好的话，我们就把户外的活动改到室内，同时提前通知所有参加的同事，免得大家白跑一趟。"},{"id":"l03","category":"long","reference":"这个季度的销售数据已经整理完了，整体比上个季度有所增长，但是有几个地区的表现不太理想，需要重点跟进。"},{"id":"l04","category":"long","reference":"我最近在学习如何更高效地安排时间，比如每天早上先列出最重要的三件事，做完之后再去处理其他零碎的事情。"},{"id":"l05","category":"long","reference":"周末我和朋友约好去郊外徒步，我们打算早上七点出发，中午在山顶简单吃点东西，下午太阳落山之前赶回市区。"},{"id":"l06","category":"long","reference":"关于新员工的入职培训，我建议把流程分成三个阶段，第一周熟悉公司制度，第二周跟着老员工学习业务，第三周独立完成一个小项目。"},{"id":"l07","category":"long","reference":"请你把上个月所有的报销单据重新核对一遍，特别是金额比较大的那几笔，确认发票和实际支付记录是一致的，然后发给财务部门。"},{"id":"l08","category":"long","reference":"我家附近新开了一家咖啡店，环境很安静，咖啡的味道也不错，价格比市中心便宜不少，以后可以在那里写文章或者开线上会议。"},{"id":"l09","category":"long","reference":"昨天晚上下了一场很大的雨，今天早上路面上还有很多积水，上班路上堵了将近一个小时，所以我可能会比平时晚一点到公司。"},{"id":"l10","category":"long","reference":"这份项目计划书里关于时间安排的部分还需要再修改，尤其是测试和上线之间的缓冲时间太短了，万一出现问题就来不及处理。"},{"id":"x01","category":"mixed","reference":"我把代码推到GitHub上了，你帮我看一下。"},{"id":"x02","category":"mixed","reference":"这个PR已经合并到主分支了。"},{"id":"x03","category":"mixed","reference":"先commit一下，再push上去。"},{"id":"x04","category":"mixed","reference":"这个API返回的数据格式不太对。"},{"id":"x05","category":"mixed","reference":"我用Python写了一个小脚本处理数据。"},{"id":"x06","category":"mixed","reference":"你可以问问ChatGPT这个问题怎么解决。"},{"id":"x07","category":"mixed","reference":"我最近一直在用Claude写代码。"},{"id":"x08","category":"mixed","reference":"公司给我配了一台Mac mini。"},{"id":"x09","category":"mixed","reference":"会议室的Wi-Fi连不上。"},{"id":"x10","category":"mixed","reference":"明天的PPT你准备好了吗？"},{"id":"x11","category":"mixed","reference":"帮我把这个Excel表格按日期排序。"},{"id":"x12","category":"mixed","reference":"这个bug我已经复现了。"},{"id":"x13","category":"mixed","reference":"项目的deadline是下周五。"},{"id":"x14","category":"mixed","reference":"请把Issue链接发给我一下。"},{"id":"x15","category":"mixed","reference":"我在本地跑通了单元测试。"},{"id":"x16","category":"mixed","reference":"这个接口需要加上token验证。"},{"id":"x17","category":"mixed","reference":"你把仓库clone下来，再切换到新分支。"},{"id":"x18","category":"mixed","reference":"服务器上的Docker容器又挂了。"},{"id":"x19","category":"mixed","reference":"这个需求要在今天的standup上同步一下。"},{"id":"x20","category":"mixed","reference":"我打算用Notion整理会议记录。"},{"id":"p01","category":"particles","reference":"你今天吃饭了吗？"},{"id":"p02","category":"particles","reference":"这个方案怎么样？"},{"id":"p03","category":"particles","reference":"我们明天几点出发？"},{"id":"p04","category":"particles","reference":"你为什么不早点告诉我？"},{"id":"p05","category":"particles","reference":"那你呢？"},{"id":"p06","category":"particles","reference":"他是不是已经到了？"},{"id":"p07","category":"particles","reference":"你说得对吧？"},{"id":"p08","category":"particles","reference":"你知道会议在哪儿开吗？"},{"id":"p09","category":"particles","reference":"就这么定了吧。"},{"id":"p10","category":"particles","reference":"这不是挺简单的嘛。"},{"id":"p11","category":"particles","reference":"他还在开会呢。"},{"id":"p12","category":"particles","reference":"嗯，这个我来处理。"},{"id":"p13","category":"particles","reference":"我知道了哦。"},{"id":"p14","category":"particles","reference":"你快点把文件发给我吧。"},{"id":"p15","category":"particles","reference":"我不知道为什么。"},{"id":"n01","category":"numbers","reference":"会议定在10月20日下午3点半。"},{"id":"n02","category":"numbers","reference":"这个月的预算是5万8千块。"},{"id":"n03","category":"numbers","reference":"我的工号是3721。"},{"id":"n04","category":"numbers","reference":"项目将在2026年12月31日前完成。"},{"id":"n05","category":"numbers","reference":"一共有123个文件需要处理。"}]}</script>
+<script>
+'use strict';
+const RECORDER_VERSION='1.0.0', CONSENT_VERSION='2026-10-18-v1', RATE=16000;
+const CONTACT='evendstate@gmail.com', HF_URL='{{HF_DATASET_URL}}';
+const SCRIPT=JSON.parse(document.getElementById('script-data').textContent);
+const $=id=>document.getElementById(id);
+
+/* ---------- text (keep consent text in sync with docs/testset/CONSENT*.md) ---------- */
+const T={
+en:{
+ name:'Cadenza',title:'Voice test recorder',
+ subtitle:'Read a short script aloud so we can measure and fix recognition accuracy. Nothing is uploaded by this page.',
+ consentH:'Consent form',licH:'Choose one license',
+ licA:'A. Public (CC0): my recordings may be published in a gated public dataset under CC0.',
+ licB:'B. Evaluation only: kept private, used only by the maintainers, never redistributed, deleted on request.',
+ ageL:'I am 18 or older and I record alone, saying nothing private.',
+ metaH:'About you',
+ regionL:'Accent or region (required)',micL:'Microphone type (required)',genderL:'Gender (optional)',agebandL:'Age range (optional)',
+ pns:'Prefer not to say',
+ regions:['Mainland China: North','Mainland China: Northeast','Mainland China: East','Mainland China: South','Mainland China: Southwest','Mainland China: Northwest','Taiwan','Hong Kong or Macau','Singapore or Malaysia','Elsewhere overseas'],
+ mics:['Built-in laptop or phone mic','Wired headset','Bluetooth headset or earbuds','USB microphone','Other'],
+ genders:['Female','Male','Non-binary','Other'],
+ ages:['18–24','25–34','35–44','45–54','55–64','65+'],
+ start:'Start recording',needAll:'Choose a license, confirm the checkbox, and pick region and microphone to continue.',
+ consent:[
+  ['What this is for','Cadenza is an open-source voice typing app for macOS. We collect recordings of people reading a fixed script so we can measure and fix recognition accuracy. The recordings are used to test and compare speech recognition, not to train or fine-tune any model.'],
+  ['What you submit','One 16 kHz mono WAV file per sentence you record, with the reference text; a random participant ID created in your browser; accent or region and microphone type (required, "prefer not to say" is allowed); gender and age range (optional). We do not ask for your name, account or location. This page uploads nothing: recordings stay in your browser until you download the zip file and send it yourself. If you submit by email, the maintainers can see your sender address; it is used only to reply and is not stored in the dataset. A voice is personal data: record alone, do not say anything private, and take part only if you are 18 or older.'],
+  ['License A: public (CC0)','I dedicate my recordings and metadata to the public domain under CC0 1.0. They may be published in a gated public dataset that anyone who applies can download. CC0 cannot limit what others do with the data, including training; the project itself uses it only for evaluation. Copies already downloaded cannot be recalled.'],
+  ['License B: evaluation only','My recordings are kept in a private dataset, used only by the maintainers to evaluate accuracy, not redistributed or published, and deleted when I ask.'],
+  ['Deletion','Email '+CONTACT+' with your participant ID (in manifest.json and in the zip file name). For B we delete your files and confirm within 30 days. For A we remove your files from the dataset and ask people with access to do the same, but cannot guarantee that downloaded copies are deleted.'],
+  ['Voluntary','You can stop at any time. Nothing leaves your device unless you send the zip file.']],
+ progText:(r,s,n)=>`${r} recorded, ${s} skipped, of ${n}`,
+ rec:'Record',stop:'Stop',rerec:'Re-record',play:'Play',stopPlay:'Stop playback',skip:'Skip',prev:'Back',next:'Next',finish:'Finish and package',
+ hint:'Press Space to start or stop. Read at a normal pace; leave a short pause before and after. Do not read the punctuation or the ID.',
+ mic0:'Allow the microphone when your browser asks.',
+ micDenied:'The microphone is blocked. Allow it in your browser settings and reload.',
+ micInsecure:'Recording needs a secure page (HTTPS) and a browser with microphone support.',
+ recording:'Recording… press Stop when done.',
+ quiet:'Too quiet. Move closer to the microphone or speak up, then re-record.',
+ clip:'Too loud (clipping). Move back a little or lower the input volume, then re-record.',
+ short:'Very short. Re-record if you missed part of the sentence.',
+ good:'Good level.',skipped:'Skipped.',
+ finH:'All set',
+ finSummary:(r,s,n)=>`${r} sentences recorded, ${s} skipped, ${n-r-s} left unrecorded.`,
+ zip:'Download zip',back:'Back to recording',zipBusy:'Packaging…',zipDone:n=>`Downloaded ${n}. Keep it until you have sent it.`,
+ noRec:'Record at least one sentence first.',
+ subH:'How to submit',
+ submit:(pid,name)=>[
+  'The zip file contains one WAV file per recorded sentence, manifest.json, consent.json and a short README. Your participant ID is '+pid+'.',
+  'Option 1 (recommended): email the zip file ('+name+', about 1 MB per 30 sentences) to '+CONTACT+'.',
+  HF_URL.includes('{{')?null:'Option 2 (license A only): upload it as a pull request on the dataset page '+HF_URL+'. Pull request content on a public dataset may be visible to others, so do not use this route for license B.',
+  'To delete your data later, email '+CONTACT+' with your participant ID.'],
+ leave:'You have recordings that are not downloaded yet.'
+},
+zh:{
+ name:'随言',title:'语音测试录音器',
+ subtitle:'照着脚本朗读几句话，帮我们衡量和修复识别准确率。本页面不会上传任何东西。',
+ consentH:'同意书',licH:'授权方式（二选一）',
+ licA:'A. 公开（CC0）：我的录音可以按 CC0 发布在需要申请才能下载的公开数据集里。',
+ licB:'B. 仅用于评测：保持私有，只供维护者使用，不再分发，可随时要求删除。',
+ ageL:'我已年满 18 岁，我独自录音，且不说任何私人内容。',
+ metaH:'关于你',
+ regionL:'口音或地区（必填）',micL:'麦克风类型（必填）',genderL:'性别（选填）',agebandL:'年龄段（选填）',
+ pns:'不愿透露',
+ regions:['中国大陆：北方','中国大陆：东北','中国大陆：华东','中国大陆：华南','中国大陆：西南','中国大陆：西北','台湾','香港或澳门','新加坡或马来西亚','其他海外地区'],
+ mics:['笔记本或手机内置麦克风','有线耳机','蓝牙耳机','USB 麦克风','其他'],
+ genders:['女','男','非二元','其他'],
+ ages:['18–24','25–34','35–44','45–54','55–64','65 以上'],
+ start:'开始录音',needAll:'请选择授权方式、勾选确认，并选好地区和麦克风类型后继续。',
+ consent:[
+  ['用途','随言是开源的 macOS 语音输入法。我们征集大家照着固定脚本朗读的录音，用来衡量和修复识别准确率。这些录音只用于测试和比较语音识别，不会用来训练或微调任何模型。'],
+  ['你会提交什么','你录下的每一句一个 16 kHz 单声道 WAV 文件及其参考文字；在你浏览器里随机生成的参与编号；口音或地区、麦克风类型（必填，可选“不愿透露”）；性别、年龄段（选填）。我们不收集姓名、账号和位置。本页面不上传任何东西：录音只留在你的浏览器里，直到你下载 zip 文件并自己发出。如果用邮件提交，维护者能看到你的发件地址，只用来回信，不写进数据集。声音属于个人信息：请独自录音，不要说出任何私人内容，且仅限年满 18 岁的人参与。'],
+  ['授权 A：公开（CC0）','我把录音和元信息按 CC0 1.0 贡献到公有领域。它们可能发布在需要申请才能下载的公开数据集里。CC0 无法限制他人的用途，包括用于训练；项目自身只用来做评测。已被他人下载的副本无法收回。'],
+  ['授权 B：仅用于评测','我的录音保存在私有数据集中，只供维护者评测准确率，不再分发、不公开，并且在我要求时删除。'],
+  ['删除','发邮件到 '+CONTACT+'，附上你的参与编号（在 manifest.json 和 zip 文件名里）。选 B：我们会删除你的文件，并在 30 天内回复确认。选 A：我们会把你的文件从数据集中移除，并请有访问权限的人一并删除，但无法保证已被下载的副本也被删除。'],
+  ['自愿参与','你可以随时停止。只要你不发出 zip 文件，任何数据都不会离开你的设备。']],
+ progText:(r,s,n)=>`已录 ${r} 句，跳过 ${s} 句，共 ${n} 句`,
+ rec:'开始录音',stop:'停止',rerec:'重录',play:'回放',stopPlay:'停止回放',skip:'跳过',prev:'上一句',next:'下一句',finish:'完成并打包',
+ hint:'按空格键开始或停止。用平常说话的速度念，前后各留一点停顿；不要念标点和编号。',
+ mic0:'浏览器询问时，请允许使用麦克风。',
+ micDenied:'麦克风被拒绝了。请在浏览器设置中允许后刷新页面。',
+ micInsecure:'录音需要安全页面（HTTPS）和支持麦克风的浏览器。',
+ recording:'正在录音……念完后点“停止”。',
+ quiet:'声音太小。请靠近麦克风或大声一点，然后重录。',
+ clip:'声音太大（爆音）。请稍微离远一点或调低输入音量，然后重录。',
+ short:'录音很短。如果漏了一部分，请重录。',
+ good:'音量合适。',skipped:'已跳过。',
+ finH:'录完了',
+ finSummary:(r,s,n)=>`已录 ${r} 句，跳过 ${s} 句，未录 ${n-r-s} 句。`,
+ zip:'下载 zip',back:'回去继续录',zipBusy:'正在打包……',zipDone:n=>`已下载 ${n}。在你发出之前请保留它。`,
+ noRec:'请先至少录一句。',
+ subH:'怎么提交',
+ submit:(pid,name)=>[
+  'zip 里有每个已录句子的 WAV 文件、manifest.json、consent.json 和一份简短说明。你的参与编号是 '+pid+'。',
+  '方式一（推荐）：把 zip 文件（'+name+'，每 30 句约 1 MB）发邮件到 '+CONTACT+'。',
+  HF_URL.includes('{{')?null:'方式二（仅授权 A）：在数据集页面 '+HF_URL+' 以 pull request 的方式上传。公开数据集上 pull request 的内容可能被其他人看到，所以选 B 的请不要走这条路。',
+  '以后想删除数据，发邮件到 '+CONTACT+'，附上你的参与编号。'],
+ leave:'你还有没下载的录音。'
+}};
+
+/* ---------- state ---------- */
+const S={lang:(navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en',pid:null,idx:0,rec:{},consentAt:null,
+ stream:null,ctx:null,proc:null,analyser:null,chunks:[],capturing:false,recPeak:0,player:null,downloaded:false,zipUrl:null};
+const t=()=>T[S.lang];
+const sents=SCRIPT.sentences;
+
+function fill(sel,items,withPns){const keep=sel.value;sel.textContent='';
+ const o0=document.createElement('option');o0.value='';o0.textContent='—';sel.appendChild(o0);
+ items.forEach((x,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=x;sel.appendChild(o)});
+ if(withPns){const o=document.createElement('option');o.value='pns';o.textContent=t().pns;sel.appendChild(o)}
+ sel.value=keep}
+function renderText(){
+ const L=t();document.documentElement.lang=S.lang==='zh'?'zh-CN':'en';
+ document.title=L.title+' · '+L.name;$('title').textContent=L.title+' · '+L.name;
+ $('langBtn').textContent=S.lang==='zh'?'English':'简体中文';$('subtitle').textContent=L.subtitle;
+ $('consentH').textContent=L.consentH;$('licH').textContent=L.licH;$('licA').textContent=L.licA;$('licB').textContent=L.licB;
+ $('ageL').textContent=L.ageL;$('metaH').textContent=L.metaH;$('regionL').textContent=L.regionL;$('micL').textContent=L.micL;
+ $('genderL').textContent=L.genderL;$('agebandL').textContent=L.agebandL;$('startBtn').textContent=L.start;
+ fill($('region'),L.regions,true);fill($('mic'),L.mics,true);fill($('gender'),L.genders,true);fill($('ageband'),L.ages,true);
+ const c=$('consentText');c.textContent='';
+ L.consent.forEach(([h,p])=>{const e=document.createElement('p');const b=document.createElement('strong');b.textContent=h;e.appendChild(b);e.appendChild(document.createElement('br'));e.appendChild(document.createTextNode(p));c.appendChild(e)});
+ $('recBtn').textContent=S.capturing?L.stop:(S.rec[sents[S.idx].id]&&S.rec[sents[S.idx].id].pcm?L.rerec:L.rec);
+ $('playBtn').textContent=S.player&&!S.player.paused?L.stopPlay:L.play;
+ $('skipBtn').textContent=L.skip;$('prevBtn').textContent=L.prev;$('nextBtn').textContent=L.next;$('finishBtn').textContent=L.finish;
+ $('hint').textContent=L.hint;$('finH').textContent=L.finH;$('zipBtn').textContent=L.zip;$('backBtn').textContent=L.back;$('subH').textContent=L.subH;
+ checkStart();if(!$('rec').hidden)renderSentence();if(!$('fin').hidden)renderFinish();
+}
+function lic(){const r=document.querySelector('input[name=lic]:checked');return r?r.value:''}
+function checkStart(){const ok=lic()&&$('age').checked&&$('region').value&&$('mic').value;$('startBtn').disabled=!ok;$('startErr').textContent=ok?'':'';$('startBtn').title=ok?'':t().needAll}
+['change','input'].forEach(ev=>$('consent').addEventListener(ev,checkStart));
+$('langBtn').onclick=()=>{S.lang=S.lang==='zh'?'en':'zh';renderText()};
+
+/* ---------- audio ---------- */
+function counts(){let r=0,s=0;for(const k in S.rec){if(S.rec[k].pcm)r++;else if(S.rec[k].skipped)s++}return[r,s]}
+async function ensureMic(){
+ if(S.stream)return;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.isSecureContext)throw new Error('insecure');
+ S.stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+ const AC=window.AudioContext||window.webkitAudioContext;S.ctx=new AC();
+ const src=S.ctx.createMediaStreamSource(S.stream);
+ S.analyser=S.ctx.createAnalyser();S.analyser.fftSize=1024;src.connect(S.analyser);
+ S.proc=S.ctx.createScriptProcessor(4096,1,1);
+ S.proc.onaudioprocess=e=>{if(!S.capturing)return;const d=e.inputBuffer.getChannelData(0);S.chunks.push(new Float32Array(d))};
+ const mute=S.ctx.createGain();mute.gain.value=0;src.connect(S.proc);S.proc.connect(mute);mute.connect(S.ctx.destination);
+ requestAnimationFrame(meterLoop);
+}
+const buf=new Float32Array(1024);
+function meterLoop(){
+ if(!S.analyser)return;S.analyser.getFloatTimeDomainData(buf);let p=0;for(let i=0;i<buf.length;i++){const a=Math.abs(buf[i]);if(a>p)p=a}
+ if(S.capturing&&p>S.recPeak)S.recPeak=p;
+ const m=$('meter');$('meterBar').style.width=Math.min(100,Math.round(p*100))+'%';m.setAttribute('aria-valuenow',String(Math.round(p*100)));
+ m.classList.toggle('clip',p>=0.98);m.classList.toggle('quiet',S.capturing&&S.recPeak<0.1&&p<0.1);
+ requestAnimationFrame(meterLoop);
+}
+function resample(f,from,to){
+ if(from===to)return f;const r=from/to,n=Math.floor(f.length/r),o=new Float32Array(n);
+ for(let i=0;i<n;i++){const s=i*r,e=s+r,a=Math.floor(s),b=Math.min(Math.ceil(e),f.length);let sum=0,w=0;
+  for(let j=a;j<b;j++){const ov=Math.min(e,j+1)-Math.max(s,j);if(ov>0){sum+=f[j]*ov;w+=ov}}o[i]=w?sum/w:0}
+ return o}
+function setStatus(msg,cls){const e=$('recStatus');e.textContent=msg;e.className='status '+(cls||'')}
+async function toggleRec(){
+ const id=sents[S.idx].id;
+ if(!S.capturing){
+  stopPlay();
+  try{await ensureMic()}catch(err){setStatus(err&&err.message==='insecure'?t().micInsecure:t().micDenied,'bad');return}
+  if(S.ctx.state==='suspended')await S.ctx.resume();
+  S.chunks=[];S.recPeak=0;S.capturing=true;setStatus(t().recording,'');$('recBtn').classList.add('on');renderButtons();
+ }else{
+  S.capturing=false;$('recBtn').classList.remove('on');
+  let n=0;S.chunks.forEach(c=>n+=c.length);const all=new Float32Array(n);let o=0;S.chunks.forEach(c=>{all.set(c,o);o+=c.length});S.chunks=[];
+  const f=resample(all,S.ctx.sampleRate,RATE);let peak=0,clipN=0;const pcm=new Int16Array(f.length);
+  for(let i=0;i<f.length;i++){let v=f[i];const a=Math.abs(v);if(a>peak)peak=a;if(a>=0.999)clipN++;v=Math.max(-1,Math.min(1,v));pcm[i]=v<0?Math.round(v*32768):Math.round(v*32767)}
+  const prev=S.rec[id];
+  S.rec[id]={pcm,peak:Math.max(peak,0),clipped:clipN>3,takes:(prev&&prev.takes||0)+1,dur:pcm.length/RATE,rate:S.ctx.sampleRate};
+  judge(S.rec[id]);renderSentence();
+ }
+}
+function judge(r){const L=t();
+ if(r.clipped)setStatus(L.clip,'bad');else if(r.peak<0.1)setStatus(L.quiet,'warn');else if(r.dur<0.4)setStatus(L.short,'warn');else setStatus(L.good,'ok')}
+function wavBytes(pcm){
+ const n=pcm.length,b=new ArrayBuffer(44+n*2),v=new DataView(b);const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+ w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+ v.setUint32(24,RATE,true);v.setUint32(28,RATE*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+ new Int16Array(b,44,n).set(pcm);return new Uint8Array(b)}
+function stopPlay(){if(S.player){S.player.pause();URL.revokeObjectURL(S.player.src);S.player=null}$('playBtn').textContent=t().play}
+function togglePlay(){
+ if(S.player){stopPlay();return}
+ const r=S.rec[sents[S.idx].id];if(!r||!r.pcm)return;
+ const url=URL.createObjectURL(new Blob([wavBytes(r.pcm)],{type:'audio/wav'}));const a=new Audio(url);S.player=a;
+ a.onended=()=>stopPlay();a.play().catch(()=>stopPlay());$('playBtn').textContent=t().stopPlay}
+
+/* ---------- sentence screen ---------- */
+function renderButtons(){
+ const s=sents[S.idx],r=S.rec[s.id],has=!!(r&&r.pcm);const L=t();
+ $('recBtn').textContent=S.capturing?L.stop:(has?L.rerec:L.rec);
+ $('playBtn').disabled=!has||S.capturing;$('skipBtn').disabled=S.capturing;
+ $('prevBtn').disabled=S.idx===0||S.capturing;$('nextBtn').disabled=S.capturing||!(has||(r&&r.skipped));
+ $('nextBtn').textContent=S.idx===sents.length-1?L.finish:L.next;
+ $('finishBtn').disabled=S.capturing||counts()[0]===0;
+}
+function renderSentence(){
+ const s=sents[S.idx],[rc,sk]=counts();stopPlay();
+ $('prog').max=sents.length;$('prog').value=rc+sk;$('progText').textContent=t().progText(rc,sk,sents.length);
+ $('sid').textContent=`${s.id} · ${S.idx+1}/${sents.length}`;$('sentence').textContent=s.reference;
+ const r=S.rec[s.id];
+ if(r&&r.pcm)judge(r);else if(r&&r.skipped)setStatus(t().skipped,'');else setStatus(S.stream?'':t().mic0,'');
+ renderButtons();
+}
+function go(i){if(S.capturing)return;if(i>=sents.length){showFinish();return}S.idx=Math.max(0,i);renderSentence()}
+$('recBtn').onclick=toggleRec;$('playBtn').onclick=togglePlay;
+$('skipBtn').onclick=()=>{const id=sents[S.idx].id;S.rec[id]={skipped:true,takes:(S.rec[id]&&S.rec[id].takes)||0};go(S.idx+1)};
+$('prevBtn').onclick=()=>go(S.idx-1);$('nextBtn').onclick=()=>go(S.idx+1);$('finishBtn').onclick=showFinish;
+document.addEventListener('keydown',e=>{
+ if(e.code!=='Space'||$('rec').hidden||e.repeat)return;const tg=e.target.tagName;if(tg==='SELECT'||tg==='INPUT'||tg==='TEXTAREA')return;
+ e.preventDefault();toggleRec()});
+$('startBtn').onclick=()=>{
+ S.consentAt=new Date().toISOString();S.pid='p-'+Array.from(crypto.getRandomValues(new Uint8Array(4)),b=>b.toString(16).padStart(2,'0')).join('');
+ $('consent').hidden=true;$('rec').hidden=false;S.idx=0;renderSentence();window.scrollTo(0,0)};
+
+/* ---------- zip ---------- */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function makeZip(files){
+ const enc=new TextEncoder(),now=new Date(),dt=((now.getFullYear()-1980)<<9|(now.getMonth()+1)<<5|now.getDate())&0xFFFF,tm=(now.getHours()<<11|now.getMinutes()<<5|(now.getSeconds()>>1))&0xFFFF;
+ const parts=[],central=[];let off=0;
+ for(const f of files){
+  const name=enc.encode(f.name),crc=crc32(f.data),h=new DataView(new ArrayBuffer(30));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,tm,true);h.setUint16(12,dt,true);
+  h.setUint32(14,crc,true);h.setUint32(18,f.data.length,true);h.setUint32(22,f.data.length,true);h.setUint16(26,name.length,true);h.setUint16(28,0,true);
+  parts.push(new Uint8Array(h.buffer),name,f.data);
+  const c=new DataView(new ArrayBuffer(46));
+  c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,tm,true);c.setUint16(14,dt,true);
+  c.setUint32(16,crc,true);c.setUint32(20,f.data.length,true);c.setUint32(24,f.data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+  central.push(new Uint8Array(c.buffer),name);off+=30+name.length+f.data.length}
+ let cs=0;central.forEach(x=>cs+=x.length);
+ const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...central,new Uint8Array(e.buffer)],{type:'application/zip'})}
+function buildZip(){
+ const enc=new TextEncoder(),root='cadenza-testset-'+S.pid,json=o=>enc.encode(JSON.stringify(o,null,2)+'\n'),files=[];
+ const items=sents.map(s=>{const r=S.rec[s.id];
+  const base={id:s.id,category:s.category,reference:s.reference};
+  if(r&&r.pcm){files.push({name:`${root}/wav/${s.id}.wav`,data:wavBytes(r.pcm)});
+   return{...base,status:'recorded',file:`wav/${s.id}.wav`,duration_s:Math.round(r.dur*1000)/1000,peak:Math.round(r.peak*1000)/1000,clipped:r.clipped,takes:r.takes}}
+  return{...base,status:r&&r.skipped?'skipped':'not_recorded',file:null,duration_s:null,takes:r?r.takes||0:0}});
+ const trk=S.stream&&S.stream.getAudioTracks()[0],set=trk&&trk.getSettings?trk.getSettings():{};
+ const consentText=t().consent.map(x=>x[0]+'\n'+x[1]).join('\n\n');
+ const consent={consent_version:CONSENT_VERSION,option:lic(),accepted_at:S.consentAt,ui_language:S.lang,confirmed_18_plus_alone:true,text_shown:consentText};
+ const L=T[S.lang];const pick=(id,list)=>{const v=$(id).value;return v===''?null:(v==='pns'?'prefer_not_to_say':list[+v])};
+ const manifest={schema_version:1,recorder_version:RECORDER_VERSION,script_version:SCRIPT.version,script_language:SCRIPT.language,participant_id:S.pid,created_at:new Date().toISOString(),
+  consent_option:lic(),consent_version:CONSENT_VERSION,
+  meta:{accent_region:pick('region',T.en.regions),microphone_type:pick('mic',T.en.mics),gender:pick('gender',T.en.genders),age_range:pick('ageband',T.en.ages)},
+  audio:{sample_rate:RATE,channels:1,format:'wav_pcm_s16le',capture_sample_rate:S.ctx?S.ctx.sampleRate:null,
+   echo_cancellation:set.echoCancellation!==undefined?set.echoCancellation:null,noise_suppression:set.noiseSuppression!==undefined?set.noiseSuppression:null,auto_gain_control:set.autoGainControl!==undefined?set.autoGainControl:null},
+  items};
+ files.push({name:`${root}/manifest.json`,data:json(manifest)},{name:`${root}/consent.json`,data:json(consent)},
+  {name:`${root}/README.txt`,data:enc.encode(`Cadenza voice test set submission\nParticipant ID: ${S.pid}\nConsent option: ${lic()} (version ${CONSENT_VERSION})\nSend this zip file as described on the recorder page. Delete requests: ${CONTACT}\n`)});
+ return{blob:makeZip(files),name:root+'.zip'}}
+
+function showFinish(){if(S.capturing)return;stopPlay();$('rec').hidden=true;$('fin').hidden=false;renderFinish();window.scrollTo(0,0)}
+function renderFinish(){const[rc,sk]=counts();$('finSummary').textContent=t().finSummary(rc,sk,sents.length);$('zipBtn').disabled=rc===0;
+ const box=$('subText');box.textContent='';t().submit(S.pid,'cadenza-testset-'+S.pid+'.zip').filter(Boolean).forEach(x=>{const p=document.createElement('p');p.textContent=x;box.appendChild(p)})}
+$('backBtn').onclick=()=>{$('fin').hidden=true;$('rec').hidden=false;renderSentence()};
+$('zipBtn').onclick=()=>{
+ if(counts()[0]===0){$('zipStatus').textContent=t().noRec;return}
+ $('zipStatus').textContent=t().zipBusy;
+ setTimeout(()=>{const z=buildZip();if(S.zipUrl)URL.revokeObjectURL(S.zipUrl);S.zipUrl=URL.createObjectURL(z.blob);
+  const a=document.createElement('a');a.href=S.zipUrl;a.download=z.name;document.body.appendChild(a);a.click();a.remove();
+  S.downloaded=true;$('zipStatus').textContent=t().zipDone(z.name);window.__lastZip=z},20)};
+window.addEventListener('beforeunload',e=>{if(counts()[0]>0&&!S.downloaded){e.preventDefault();e.returnValue=''}});
+renderText();
+</script>
+</body>
+</html>

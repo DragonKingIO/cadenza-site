@@ -3,6 +3,22 @@ title: Changelog
 description: What changed in each version.
 ---
 
+## 1.3.4 — early preview
+
+- **The keyboard shortcut keeps working after you use the voice remote.** The Mac could keep treating one of the remote's keys as held down, so Left Option did not start dictation again until Cadenza was restarted.
+- Local model downloads show their progress again.
+
+## 1.3.3 — early preview
+
+- **Fewer clipped sentence endings with the voice remote.** The remote stops sending sound slightly before you let go, so the Mac microphone now listens from the start of the hold, fills that gap and keeps listening for 0.3 seconds after the release. Not used with a Bluetooth microphone; a hold longer than the remote's 21-second limit ends as before.
+- **The keyboard shortcut keeps listening for 0.3 seconds after you let go** with a local model, so the last syllable of a quick sentence is kept.
+- The remote's recording wave no longer freezes after the click of pressing the key.
+
+## 1.3.2 — early preview
+
+- **A smoother recording bar.** The wave no longer stutters while you speak.
+- **Numbers in digits.** With a local model, a number written half in digits and half in Chinese numerals (`十0本`) now uses digits (`10本`). Words such as `一个` or `第二章` are never changed.
+
 ## 1.3.1 — early preview
 
 - **Voice remote: 66 key actions in groups, and three presets** (Voice assistant, Select and edit, Media and system). Move or select text, edit, page, media, volume, brightness, Mission Control, Spotlight, tab and window shortcuts, screenshots and more.

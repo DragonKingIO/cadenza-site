@@ -27,6 +27,8 @@ The **Recognition settings** tab holds language, number formatting, voice-detect
   the guess sometimes took short Mandarin for Japanese or Korean.
 - **Voice-detection sensitivity.** Move toward "More sensitive" if you speak softly and the start gets cut off; toward
   "Fewer false starts" if background noise is treated as speech.
+- **Mixed numbers.** When a local model writes a number half in digits and half in Chinese numerals (`十0本`, `二0次`), Cadenza
+  writes it in digits (`10本`, `20次`). Words such as `一个`, `一下`, `第二章` and `百分之百` are never changed.
 
 ## Cloud services (optional)
 

@@ -8,6 +8,9 @@ description: Fixes for the common problems, and how to report a bug without shar
 See [Shortcuts and permissions](../shortcuts-and-permissions/): check Settings → Privacy for "on but not working", restart the app
 after changing a permission, and check for keyboard remapping.
 
+If the shortcut stopped working after you used the Xiaomi voice remote and only a restart of Cadenza helped, update to
+1.3.4 or later, which fixes this.
+
 ## The text did not appear
 
 - Cadenza types into the field that had focus when you started. If you switch to another window while you speak, it will not

@@ -7,6 +7,8 @@ description: How the hold shortcut works, how to change it, and what each permis
 
 By default you **hold Left Option**, speak, and release. The text is typed when you let go. Press **Esc** to cancel.
 
+With a local model, Cadenza keeps listening for 0.3 seconds after you release the shortcut, so the last syllable of a quick sentence is not lost.
+
 On the **Shortcut** page you can:
 
 - change the shortcut: click **Change** and press the key or combination you want;
